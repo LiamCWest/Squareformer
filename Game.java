@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
 
@@ -13,6 +14,7 @@ public class Game extends JPanel{
     public Game(Main main) {
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
+        setFocusable(true);
 
         this.main = main;
         gameManager = new GameManager(this);
@@ -68,9 +70,55 @@ public class Game extends JPanel{
         g.drawImage(offScreenBuffer, 0, 0, this);
     }
 
-    // w - setjump(true), a - setmovementvector(-1), d - setmovementvector(1)
+    public void registerMovementInput() {
+        System.out.println("Registering movement input");
+
+        // Create the input map and action map
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
+
+        // Define the movement input key bindings
+        KeyStroke wKey = KeyStroke.getKeyStroke(KeyEvent.VK_W, 0);
+        KeyStroke aKey = KeyStroke.getKeyStroke(KeyEvent.VK_A, 0);
+        KeyStroke dKey = KeyStroke.getKeyStroke(KeyEvent.VK_D, 0);
+
+        // Register the movement actions with the input map and action map
+        inputMap.put(wKey, "jumpAction");
+        inputMap.put(aKey, "leftAction");
+        inputMap.put(dKey, "rightAction");
+        actionMap.put("jumpAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Jump action");
+                // Call the jump action method in GameManager
+                gameManager.setJump(true);
+            }
+        });
+        actionMap.put("leftAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Left action");
+                setMovementVector(0, -1);
+            }
+        });
+        actionMap.put("rightAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Right action");
+                setMovementVector(0, 1);
+            }
+        });
+    }
 
     public Vector<Integer> getMovementVector() {
         return movementVector;
+    }
+
+    public void setMovementVector(int index, int value) {
+        movementVector.set(index, value);
+    }
+
+    public void Jump(){
+        gameManager.setJump(true);
     }
 }

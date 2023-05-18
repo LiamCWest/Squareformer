@@ -6,6 +6,7 @@ public class Main extends JFrame{
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private Game gamePanel;
+    private MainMenu menuPanel;
     
     public Main() {
         // Create the main frame
@@ -21,7 +22,7 @@ public class Main extends JFrame{
         
         // Create the game panel and menu panel
         gamePanel = new Game(this);
-        MainMenu menuPanel = new MainMenu(this);
+        menuPanel = new MainMenu(this);
         
         // Add the panels to the card panel
         cardPanel.add(gamePanel, "game");
@@ -40,20 +41,27 @@ public class Main extends JFrame{
     
     public void showGame() {
         cardLayout.show(cardPanel, "game");
-        gamePanel.setFocusable(true);
-        gamePanel.requestFocus();
-        movementInput();
+    
+        if (!cardPanel.isAncestorOf(gamePanel)) {
+            System.out.println("gamePanel is not added to the panel hierarchy.");
+            return;
+        }
+
+        SwingUtilities.invokeLater(() -> {
+            gamePanel.setFocusable(true);
+            gamePanel.requestFocusInWindow();
+        });
+    
+        gamePanel.registerMovementInput();
+        
+        KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        System.out.println(focusManager.getFocusOwner());
+        
         gamePanel.start();
     }
 
-    public void movementInput(){
-        gamePanel.getInputMap().put(KeyStroke.getKeyStroke("W"), "W");
-        gamePanel.getActionMap().put("W", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("W");
-            }
-        });
+    public void registerMovementInput() {
+        gamePanel.registerMovementInput();
     }
 
     public static void main(String[] args) {
