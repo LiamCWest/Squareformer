@@ -46,18 +46,15 @@ public class Main extends JFrame{
             System.out.println("gamePanel is not added to the panel hierarchy.");
             return;
         }
-
+        gamePanel.setFocusable(true);
+        gamePanel.requestFocusInWindow();
+        
         SwingUtilities.invokeLater(() -> {
-            gamePanel.setFocusable(true);
-            gamePanel.requestFocusInWindow();
+            KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            System.out.println(focusManager.getFocusOwner());
+            gamePanel.registerMovementInput();
+            gamePanel.start();
         });
-    
-        gamePanel.registerMovementInput();
-        
-        KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        System.out.println(focusManager.getFocusOwner());
-        
-        gamePanel.start();
     }
 
     public void registerMovementInput() {

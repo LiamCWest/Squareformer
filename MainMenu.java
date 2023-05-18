@@ -16,11 +16,13 @@ public class MainMenu extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Show the menu panel
-                playButton.setFocusable(false);
                 playButton.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
                 playButton.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
+                playButton.setFocusable(false);
                 playButton.removeActionListener(playButton.getActionListeners()[0]);
-                main.showGame();
+                SwingUtilities.invokeLater(() -> {
+                    main.showGame();
+                });
             }
         });
         add(playButton, BorderLayout.CENTER);
