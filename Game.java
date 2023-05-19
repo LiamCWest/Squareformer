@@ -73,20 +73,11 @@ public class Game extends JPanel{
     public void registerMovementInput() {
         System.out.println("Registering movement input");
 
-        // Create the input map and action map
-        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        ActionMap actionMap = getActionMap();
-
-        // Define the movement input key bindings
-        KeyStroke wKey = KeyStroke.getKeyStroke(KeyEvent.VK_W, 0);
-        KeyStroke aKey = KeyStroke.getKeyStroke(KeyEvent.VK_A, 0);
-        KeyStroke dKey = KeyStroke.getKeyStroke(KeyEvent.VK_D, 0);
-
         // Register the movement actions with the input map and action map
-        inputMap.put(wKey, "jumpAction");
-        inputMap.put(aKey, "leftAction");
-        inputMap.put(dKey, "rightAction");
-        actionMap.put("jumpAction", new AbstractAction() {
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "jumpAction");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), "leftAction");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), "rightAction");
+        getActionMap().put("jumpAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Jump action");
@@ -94,14 +85,14 @@ public class Game extends JPanel{
                 gameManager.setJump(true);
             }
         });
-        actionMap.put("leftAction", new AbstractAction() {
+        getActionMap().put("leftAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Left action");
                 setMovementVector(0, -1);
             }
         });
-        actionMap.put("rightAction", new AbstractAction() {
+        getActionMap().put("rightAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Right action");

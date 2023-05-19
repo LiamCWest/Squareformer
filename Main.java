@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class Main extends JFrame{
     private CardLayout cardLayout;
@@ -46,13 +45,13 @@ public class Main extends JFrame{
             System.out.println("gamePanel is not added to the panel hierarchy.");
             return;
         }
-        gamePanel.setFocusable(true);
-        gamePanel.requestFocusInWindow();
+        this.setFocusable(true);
+        this.requestFocusInWindow();
         
         SwingUtilities.invokeLater(() -> {
             KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             System.out.println(focusManager.getFocusOwner());
-            gamePanel.registerMovementInput();
+            registerMovementInput();
             gamePanel.start();
         });
     }
@@ -60,7 +59,7 @@ public class Main extends JFrame{
     public void registerMovementInput() {
         gamePanel.registerMovementInput();
     }
-
+    
     public static void main(String[] args) {
         // Game game = new Game();
         // game.gameLoop();
