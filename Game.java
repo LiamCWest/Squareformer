@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-
+import java.util.ArrayList;
 // Vector for the movement input
 import java.util.Vector;
 
@@ -51,20 +51,20 @@ public class Game extends JPanel{
     }
 
     // method to start the game
-    public void start() {
+    public void start(Boolean restart) {
         running = true;
-        if(gameThread.getState() == Thread.State.NEW){
-            gameManager.start();
-            gameThread.start();
-        }
-        else{
+        if(gameThread.getState() != Thread.State.NEW){
             gameThread = new Thread(() -> {
                 while(true){
                     gameLoop();
                 }
             });
-            gameThread.start();
         }
+        if(restart){
+            gameManager.setGameObjects(new ArrayList<GameObject>());
+            gameManager.start();
+        }
+        gameThread.start();
     }
 
     // the game loop that runs the game

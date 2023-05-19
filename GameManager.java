@@ -47,6 +47,11 @@ public class GameManager {
     public ArrayList<GameObject> getGameObjects() {
         return gameObjects;
     }
+    
+    // setter method for the game objects array list
+    public void setGameObjects(ArrayList<GameObject> gameObjects) {
+        this.gameObjects = gameObjects;
+    }
 
     // sets the jumping boolean
     public void setJump(Boolean jump) {

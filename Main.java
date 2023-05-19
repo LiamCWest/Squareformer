@@ -8,7 +8,8 @@ public class Main extends JFrame{
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private Game gamePanel;
-    private MainMenu menuPanel;
+    private Menu menuPanel;
+    private Menu pausePanel;
     
     // constructor
     public Main() {
@@ -22,15 +23,29 @@ public class Main extends JFrame{
         cardPanel = new JPanel();
         cardLayout = new CardLayout();
         cardPanel.setLayout(cardLayout);
-        // setContentPane(cardPanel);
         
-        // Create the game panel and menu panel
+        // Create the panels
         gamePanel = new Game(this);
-        menuPanel = new MainMenu(this);
+        menuPanel = new Menu(this, Color.GREEN, null);
+        menuPanel.addButton("Play", (a,b) -> {
+            showGame(true);
+            return 1;
+        }, new int[]{100,60}, new int[]{(getSize().width/2)-50,100}, true);
+
+        pausePanel = new Menu(this, Color.BLUE, null);
+        pausePanel.addButton("Resume", (a,b) -> {
+            showGame(false);
+            return 1;
+        }, new int[]{100,60}, new int[]{(getSize().width/2)-50,100}, true);
+        pausePanel.addButton("Restart", (a,b) -> {
+            showGame(true);
+            return 1;
+        }, new int[]{100,60}, new int[]{(getSize().width/2)-50,200}, true);
         
         // Add the panels to the card panel
         cardPanel.add(gamePanel, "game");
         cardPanel.add(menuPanel, "menu");
+        cardPanel.add(pausePanel, "pause");
         
         // Add the card panel to the frame
         add(cardPanel, BorderLayout.CENTER);
@@ -47,7 +62,7 @@ public class Main extends JFrame{
     }
     
     // method to show the game panel
-    public void showGame() {
+    public void showGame(Boolean restart) {
         // Show the game panel
         cardLayout.show(cardPanel, "game");
 
@@ -59,12 +74,12 @@ public class Main extends JFrame{
         SwingUtilities.invokeLater(() -> {
             KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             focusManager.focusNextComponent();
-            gamePanel.start();
+            gamePanel.start(restart);
         });
     }
 
     public void showMenu(){
-        cardLayout.show(cardPanel, "menu");
+        cardLayout.show(cardPanel, "pause");
 
         KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         focusManager.focusNextComponent();
@@ -78,26 +93,19 @@ public class Main extends JFrame{
         gamePanel.setFocusable(true);
         gamePanel.requestFocusInWindow();
     }
-    
 
     // main method
     public static void main(String[] args) {
         try {
-            // Set System L&F
-            UIManager.setLookAndFeel(
-                UIManager.getSystemLookAndFeelClassName());
-        } 
-        catch (UnsupportedLookAndFeelException e) {
-        // handle exception
-        }
-        catch (ClassNotFoundException e) {
-        // handle exception
-        }
-        catch (InstantiationException e) {
-        // handle exception
-        }
-        catch (IllegalAccessException e) {
-        // handle exception
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
         }
 
         SwingUtilities.invokeLater(Main::new);
