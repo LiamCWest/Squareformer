@@ -82,8 +82,23 @@ public class Main extends JFrame{
 
     // main method
     public static void main(String[] args) {
-        // Game game = new Game();
-        // game.gameLoop();
+        try {
+            // Set System L&F
+            UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName());
+        } 
+        catch (UnsupportedLookAndFeelException e) {
+        // handle exception
+        }
+        catch (ClassNotFoundException e) {
+        // handle exception
+        }
+        catch (InstantiationException e) {
+        // handle exception
+        }
+        catch (IllegalAccessException e) {
+        // handle exception
+        }
 
         SwingUtilities.invokeLater(Main::new);
     }
@@ -93,15 +108,17 @@ public class Main extends JFrame{
 /*
 TODO
 menu - 1
-
     level selector
     settings
         keybinds maybe
 moving objects - physics system, onCollision(){if(moveable) add force} - 2
-enemies - 3
-fighting system - 4
-Class for levels - 5
-storage of some sort - 6
+movement abilities -3
+Class for levels - 4
+storage of some sort - 5
 objective, win condition, and just generally what the game is
-level editor maybe?
+
+maybe:
+level editor
+enemies 
+fighting system
 */

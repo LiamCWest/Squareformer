@@ -19,7 +19,7 @@ public class GameManager {
     // method to start the game
     public void start(){
         // Create the player and add it to the game objects
-        player = new Player(100, 0, new Color[]{Color.RED}, new Polygon[]{new Polygon(new int[]{0,50,50,0}, new int[]{0,0,50,50}, 4)}, true, null, true, this);
+        player = new Player(100, 600, new Color[]{Color.RED}, new Polygon[]{new Polygon(new int[]{0,50,50,0}, new int[]{0,0,50,50}, 4)}, true, null, true, this);
         gameObjects.add(player);
 
         /// Create the ground and add it to the game objects
@@ -28,22 +28,27 @@ public class GameManager {
         gameObjects.add(new GameObject(600, 550, new Color[]{Color.BLACK}, new Polygon[]{new Polygon(new int[]{0,150,150,0}, new int[]{0,0,50,50}, 4)}, true, null, false, this));
     }
 
+    // update method, updates everything each frame
     public void update() {
+        // Move the player
         player.moveForce(game.getMovementVector().get(0), 0);
         if (isJumping) {
             player.jump();
             isJumping = false;
         }
 
+        // update all the game objects positions
         for (GameObject gameObject : gameObjects) {
             gameObject.move();
         }
     }
 
+    // getter method for the game objects array list
     public ArrayList<GameObject> getGameObjects() {
         return gameObjects;
     }
 
+    // sets the jumping boolean
     public void setJump(Boolean jump) {
         isJumping = jump;
     }

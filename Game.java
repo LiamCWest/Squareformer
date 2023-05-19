@@ -119,8 +119,6 @@ public class Game extends JPanel{
 
     // method to register the movement input
     public void registerMovementInput() {
-        System.out.println("Registering movement input");
-
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = getActionMap();
 

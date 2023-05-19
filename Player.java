@@ -1,14 +1,14 @@
 import java.awt.*;
 
 public class Player extends GameObject {
-    private double jumpHeight = 150;
+    private double jumpHeight = 200;
     private double currentJumpHeight = 0;
     private boolean isJumping = false;
     private boolean isFalling = false;
-    private double jumpForce = -4;
-    private double moveForce = 10;
+    private double jumpForce = -3;
+    private double moveForce = 8;
     private double dragOnGround = 0.9;
-    private double dragInAir = 0.9;
+    private double dragInAir = 0.8;
 
     Player(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, Boolean hasGravity, GameManager gameManager) {
         super(x, y, colors, shapes, shapeQ, image, hasGravity, gameManager);
@@ -20,7 +20,7 @@ public class Player extends GameObject {
             currentJumpHeight = 0;
             isFalling = false;
         }
-        else{
+        else if(!(isJumping)){
             isFalling = true;
         }
 
@@ -34,7 +34,7 @@ public class Player extends GameObject {
                 isFalling = true;
             }
         } else if (isFalling) {
-            setVelocity(getVelocity()[0], 0.1);
+            setVelocity(getVelocity()[0], 0.05);
         }
 
         if (Math.abs(getVelocity()[0]) > 0) {
