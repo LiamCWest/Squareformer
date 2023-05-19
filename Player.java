@@ -20,6 +20,9 @@ public class Player extends GameObject {
             currentJumpHeight = 0;
             isFalling = false;
         }
+        else{
+            isFalling = true;
+        }
 
         if (isJumping) {
             if (currentJumpHeight < jumpHeight) {
@@ -31,7 +34,7 @@ public class Player extends GameObject {
                 isFalling = true;
             }
         } else if (isFalling) {
-            setVelocity(getVelocity()[0], 0.25);
+            setVelocity(getVelocity()[0], 0.1);
         }
 
         if (Math.abs(getVelocity()[0]) > 0) {

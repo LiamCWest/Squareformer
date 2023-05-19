@@ -22,6 +22,7 @@ public class Main extends JFrame{
         cardPanel = new JPanel();
         cardLayout = new CardLayout();
         cardPanel.setLayout(cardLayout);
+        // setContentPane(cardPanel);
         
         // Create the game panel and menu panel
         gamePanel = new Game(this);
@@ -33,10 +34,12 @@ public class Main extends JFrame{
         
         // Add the card panel to the frame
         add(cardPanel, BorderLayout.CENTER);
-        
+
         // Show the menu panel initially
         cardLayout.show(cardPanel, "menu");
         
+        registerMovementInput();
+
         // Show the frame
         SwingUtilities.invokeLater(() -> {
             setVisible(true);
@@ -49,21 +52,31 @@ public class Main extends JFrame{
         cardLayout.show(cardPanel, "game");
 
         // Set the focus to the game panel
-        this.setFocusable(true);
-        this.requestFocusInWindow();
+        gamePanel.setFocusable(true);
+        gamePanel.requestFocusInWindow();
         
         // Start the game
         SwingUtilities.invokeLater(() -> {
             KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-            System.out.println(focusManager.getFocusOwner());
-            registerMovementInput();
+            focusManager.focusNextComponent();
             gamePanel.start();
         });
+    }
+
+    public void showMenu(){
+        cardLayout.show(cardPanel, "menu");
+
+        KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        focusManager.focusNextComponent();
     }
 
     // call the movement input method in the game panel
     public void registerMovementInput() {
         gamePanel.registerMovementInput();
+    
+        // Set the focus to the game panel
+        gamePanel.setFocusable(true);
+        gamePanel.requestFocusInWindow();
     }
     
 

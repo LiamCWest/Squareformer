@@ -15,6 +15,9 @@ public class Game extends JPanel{
     private GameManager gameManager;
     private Main main;
     private boolean running = false;
+    private Thread gameThread;
+
+    public double delta;
 
     // constructor
     public Game(Main main) {
@@ -32,6 +35,12 @@ public class Game extends JPanel{
         movementVector.add(0);  // Initialize index 0 with value 0
         movementVector.add(0);  // Initialize index 1 with value 0
 
+        gameThread = new Thread(() -> {
+            while(true){
+                gameLoop();
+            }
+        });
+
         // Create the off-screen buffer with the same size as the window
         offScreenBuffer = new BufferedImage(main.getSize().width, main.getSize().height, BufferedImage.TYPE_INT_ARGB);
     }
@@ -44,8 +53,18 @@ public class Game extends JPanel{
     // method to start the game
     public void start() {
         running = true;
-        gameManager.start();
-        gameLoop();
+        if(gameThread.getState() == Thread.State.NEW){
+            gameManager.start();
+            gameThread.start();
+        }
+        else{
+            gameThread = new Thread(() -> {
+                while(true){
+                    gameLoop();
+                }
+            });
+            gameThread.start();
+        }
     }
 
     // the game loop that runs the game
@@ -54,8 +73,9 @@ public class Game extends JPanel{
         long lastTime = System.nanoTime();
         double amountOfTicks = 60.0;
         double ns = 1000000000 / amountOfTicks;
-        double delta = 0;
+        delta = 0;
         long timer = System.currentTimeMillis();
+
 
         // The game loop
         while (running) {
@@ -63,11 +83,9 @@ public class Game extends JPanel{
             long now = System.nanoTime();
             delta += (now - lastTime) / ns;
             lastTime = now;
-            while (delta >= 1) {
-                // Update the game state
-                gameManager.update();
-                delta--;
-            }
+            // Update the game state
+            gameManager.update();
+
             // Render the game state
             render();
 
@@ -76,23 +94,26 @@ public class Game extends JPanel{
         }
     }
 
-    // method to render the game to the game panel
+   // Method to render the game to the game panel
     public void render() {
-        // Get the graphics objects from the off-screen buffer and the game panel
-        Graphics g = getGraphics();
-        Graphics bbg = offScreenBuffer.getGraphics();
+        // Get the graphics object from the off-screen buffer
+        Graphics2D g = offScreenBuffer.createGraphics();
 
         // Clear the off-screen buffer
-        bbg.setColor(new Color(255, 255, 255, 255));
-        bbg.fillRect(0, 0, this.getSize().width + 100, this.getSize().height + 100);
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, getSize().width, getSize().height);
 
         // Draw the game objects
         for (GameObject gameObject : gameManager.getGameObjects()) {
-            gameObject.draw(bbg);
+            gameObject.draw(g);
         }
 
         // Draw the off-screen buffer to the game panel
-        g.drawImage(offScreenBuffer, 0, 0, this);
+        Graphics panelGraphics = getGraphics();
+        if (panelGraphics != null) {
+            panelGraphics.drawImage(offScreenBuffer, 0, 0, null);
+            panelGraphics.dispose();
+        }
     }
 
 
@@ -100,35 +121,63 @@ public class Game extends JPanel{
     public void registerMovementInput() {
         System.out.println("Registering movement input");
 
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
+
         // Register the movement actions with the input map and action map
         // The input map maps a key stroke to a string
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "jumpAction");
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), "leftAction");
-        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), "rightAction");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "jumpAction");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), "leftAction");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), "rightAction");
+
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, true), "jumpActionRelease");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "leftActionRelease");
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "rightActionRelease");
+        
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapeAction");
 
         // The action map maps a string to an action
-        getActionMap().put("jumpAction", new AbstractAction() {
+        actionMap.put("jumpAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Jump action");
                 // Call the jump action method in GameManager
                 gameManager.setJump(true);
             }
         });
-        getActionMap().put("leftAction", new AbstractAction() {
+        actionMap.put("leftAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Left action");
                 // Set the movement vector to move left
                 setMovementVector(0, -1);
             }
         });
-        getActionMap().put("rightAction", new AbstractAction() {
+        actionMap.put("rightAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Right action");
                 // Set the movement vector to move right
                 setMovementVector(0, 1);
+            }
+        });
+        actionMap.put("leftActionRelease", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Set the movement vector to stop moving left
+                setMovementVector(0, 0);
+            }
+        });
+        actionMap.put("rightActionRelease", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Set the movement vector to stop moving right
+                setMovementVector(0, 0);
+            }
+        });
+        actionMap.put("escapeAction", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Call the escape action method in GameManager
+                stop();
+                main.showMenu();
             }
         });
     }
@@ -144,7 +193,7 @@ public class Game extends JPanel{
     }
 
     // call the jump method in GameManager
-    public void Jump(){
+    public void jump(){
         gameManager.setJump(true);
     }
 }
