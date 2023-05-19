@@ -1,12 +1,16 @@
+// basic imports for swing
 import javax.swing.*;
 import java.awt.*;
 
+// main class
 public class Main extends JFrame{
+    // private variables for the panels and card layout
     private CardLayout cardLayout;
     private JPanel cardPanel;
     private Game gamePanel;
     private MainMenu menuPanel;
     
+    // constructor
     public Main() {
         // Create the main frame
         setTitle("Game");
@@ -33,21 +37,22 @@ public class Main extends JFrame{
         // Show the menu panel initially
         cardLayout.show(cardPanel, "menu");
         
+        // Show the frame
         SwingUtilities.invokeLater(() -> {
             setVisible(true);
         });
     }
     
+    // method to show the game panel
     public void showGame() {
+        // Show the game panel
         cardLayout.show(cardPanel, "game");
-    
-        if (!cardPanel.isAncestorOf(gamePanel)) {
-            System.out.println("gamePanel is not added to the panel hierarchy.");
-            return;
-        }
+
+        // Set the focus to the game panel
         this.setFocusable(true);
         this.requestFocusInWindow();
         
+        // Start the game
         SwingUtilities.invokeLater(() -> {
             KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             System.out.println(focusManager.getFocusOwner());
@@ -56,10 +61,13 @@ public class Main extends JFrame{
         });
     }
 
+    // call the movement input method in the game panel
     public void registerMovementInput() {
         gamePanel.registerMovementInput();
     }
     
+
+    // main method
     public static void main(String[] args) {
         // Game game = new Game();
         // game.gameLoop();
