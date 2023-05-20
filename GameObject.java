@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GameObject{
     private int x;
@@ -7,15 +8,18 @@ public class GameObject{
     private Polygon[] shapes;
     private Polygon[] movedShapes;
     private Color[] colors;
-    private Boolean shapeQ;
+    private boolean shapeQ;
     private Image image;
     private boolean hasGravity;
+    private boolean isMoveable;
+    public boolean isPhysicsObject;
     private GameManager gameManager;
+    private ArrayList<GameObject> collidingObjects;
 
     private Rectangle hitboxShape;
     private Rectangle hitbox;
 
-    public GameObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, GameManager gameManager) {
+    public GameObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isMoveable, boolean isPhysicsObject, GameManager gameManager) {
         this.x = x;
         this.y = y;
         this.colors = colors;
@@ -24,8 +28,11 @@ public class GameObject{
         this.shapeQ = shapeQ;
         this.image = image;
         this.hasGravity = hasGravity;
+        this.isMoveable = isMoveable;
+        this.isPhysicsObject = isPhysicsObject;
         this.gameManager = gameManager;
         this.velocity = new double[]{0, 0};
+        this.collidingObjects = new ArrayList<GameObject>();
         if(shapeQ){
             this.hitboxShape = new Rectangle();
             calculateBoundingBox();
@@ -53,20 +60,29 @@ public class GameObject{
     }
 
     public void move(){
-        if(hasGravity){
-            if(!(isGrounded())){
-                velocity[1] += 1;
-            }
-            else if (velocity[1] > 0){
-                velocity[1] = 0;
+        collidingObjects = new ArrayList<GameObject>();
+        if(isMoveable && isColliding()){
+            for(GameObject object : collidingObjects){
+                if(object.isPhysicsObject){
+                    velocity[0] += object.getVelocity()[0];
+                    velocity[1] += object.getVelocity()[1];
+                }
             }
         }
-        if(isCollidingSides()){
-            velocity[0] = 0;
+
+        if(!(isGrounded())){
+            if(hasGravity) velocity[1] += 1;
         }
-        if(isCollidingTop()){
+        else if (velocity[1] > 0){
             velocity[1] = 0;
         }
+        if(collidingUp() && velocity[1] < 0){
+            velocity[1] = 0;
+        }
+        if((collidingLeft() && velocity[0] < 0) || (collidingRight() && velocity[0] > 0)){
+            velocity[0] = 0;
+        }
+        
         this.x += velocity[0];
         this.y += velocity[1];
         this.hitbox = moveHitbox(this.x, this.y);
@@ -125,24 +141,30 @@ public class GameObject{
         return new Rectangle(hitboxShape.x + dx, hitboxShape.y + dy, hitboxShape.width, hitboxShape.height);
     }
 
-    //combine these 3 into one method
-    public Boolean isGrounded(){
-        Rectangle checkBox = new Rectangle(hitbox.x + 1, hitbox.y + 1, hitbox.width - 2, hitbox.height);
-        for(GameObject gameObject : gameManager.getGameObjects()){
-            if(gameObject != this){
-                if(gameObject.getHitbox().intersects(checkBox)){
-                    return true;
-                }
-            }
-        }
-        return false;
+    //colllision
+    public boolean isColliding(){
+        return isGrounded() || collidingUp() || collidingLeft() || collidingRight();
     }
-
-    public Boolean isCollidingSides(){
+    
+    public boolean isGrounded() {
         Rectangle checkBox = new Rectangle(hitbox.x + (int)velocity[0] + 1, hitbox.y + (int)velocity[1]+1, hitbox.width-1, hitbox.height-2);
         for(GameObject gameObject : gameManager.getGameObjects()){
             if(gameObject != this){
                 if(gameObject.getHitbox().intersects(checkBox)){
+                    collidingObjects.add(gameObject);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean collidingUp(){
+        Rectangle checkBox = new Rectangle(hitbox.x + (int)velocity[0]+1, hitbox.y + (int)velocity[1], hitbox.width-2, hitbox.height-1);
+        for(GameObject gameObject : gameManager.getGameObjects()){
+            if(gameObject != this){
+                if(gameObject.getHitbox().intersects(checkBox)){
+                    collidingObjects.add(gameObject);
                     return true;
                 }
             }
@@ -150,11 +172,25 @@ public class GameObject{
         return false;
     }
 
-    public Boolean isCollidingTop(){
-        Rectangle checkBox = new Rectangle(hitbox.x + (int)velocity[0]+1, hitbox.y + (int)velocity[1], hitbox.width-2, hitbox.height-1);
+    public boolean collidingLeft(){
+        Rectangle checkBox = new Rectangle(hitbox.x + (int)velocity[0], hitbox.y + (int)velocity[1]+1, hitbox.width, hitbox.height-3);
         for(GameObject gameObject : gameManager.getGameObjects()){
             if(gameObject != this){
                 if(gameObject.getHitbox().intersects(checkBox)){
+                    collidingObjects.add(gameObject);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean collidingRight(){
+        Rectangle checkBox = new Rectangle(hitbox.x + (int)velocity[0], hitbox.y + (int)velocity[1]+1, hitbox.width, hitbox.height-3);
+        for(GameObject gameObject : gameManager.getGameObjects()){
+            if(gameObject != this){
+                if(gameObject.getHitbox().intersects(checkBox)){
+                    collidingObjects.add(gameObject);
                     return true;
                 }
             }

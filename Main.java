@@ -26,21 +26,8 @@ public class Main extends JFrame{
         
         // Create the panels
         gamePanel = new Game(this);
-        menuPanel = new Menu(this, Color.GREEN, null);
-        menuPanel.addButton("Play", (a,b) -> {
-            showGame(true);
-            return 1;
-        }, new int[]{100,60}, new int[]{(getSize().width/2)-50,100}, true);
-
-        pausePanel = new Menu(this, Color.BLUE, null);
-        pausePanel.addButton("Resume", (a,b) -> {
-            showGame(false);
-            return 1;
-        }, new int[]{100,60}, new int[]{(getSize().width/2)-50,100}, true);
-        pausePanel.addButton("Restart", (a,b) -> {
-            showGame(true);
-            return 1;
-        }, new int[]{100,60}, new int[]{(getSize().width/2)-50,200}, true);
+        createMainMenu();
+        createPauseMenu();
         
         // Add the panels to the card panel
         cardPanel.add(gamePanel, "game");
@@ -61,6 +48,44 @@ public class Main extends JFrame{
         });
     }
     
+    public void createMainMenu(){
+        menuPanel = new Menu(this, Color.GREEN, null);
+
+        menuPanel.addButton("Play", (a,b) -> {
+            showGame(true);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true);
+
+        menuPanel.addButton("Exit", (a,b) -> {
+            System.exit(0);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
+    }
+
+    public void createPauseMenu(){
+        pausePanel = new Menu(this, Color.BLUE, null);
+
+        pausePanel.addButton("Resume", (a,b) -> {
+            showGame(false);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true);
+
+        pausePanel.addButton("Restart", (a,b) -> {
+            showGame(true);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
+
+        pausePanel.addButton("Main Menu", (a,b) -> {
+            showMainMenu();
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true);
+
+        pausePanel.addButton("Exit", (a,b) -> {
+            System.exit(0);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,400}, true);
+    }
+
     // method to show the game panel
     public void showGame(Boolean restart) {
         // Show the game panel
@@ -78,8 +103,15 @@ public class Main extends JFrame{
         });
     }
 
-    public void showMenu(){
+    public void showPauseMenu(){
         cardLayout.show(cardPanel, "pause");
+
+        KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        focusManager.focusNextComponent();
+    }
+
+    public void showMainMenu(){
+        cardLayout.show(cardPanel, "menu");
 
         KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         focusManager.focusNextComponent();
@@ -115,14 +147,11 @@ public class Main extends JFrame{
 
 /*
 TODO
-menu - 1
-    level selector
-    settings
-        keybinds maybe
 moving objects - physics system, onCollision(){if(moveable) add force} - 2
 movement abilities -3
 Class for levels - 4
 storage of some sort - 5
+level selector - 6
 objective, win condition, and just generally what the game is
 
 maybe:

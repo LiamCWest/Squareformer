@@ -175,7 +175,7 @@ public class Game extends JPanel{
             public void actionPerformed(ActionEvent e) {
                 // Call the escape action method in GameManager
                 stop();
-                main.showMenu();
+                main.showPauseMenu();
             }
         });
     }

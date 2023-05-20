@@ -10,8 +10,8 @@ public class Player extends GameObject {
     private double dragOnGround = 0.9;
     private double dragInAir = 0.8;
 
-    Player(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, Boolean hasGravity, GameManager gameManager) {
-        super(x, y, colors, shapes, shapeQ, image, hasGravity, gameManager);
+    Player(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isMoveable, boolean isPhysicsObject, GameManager gameManager) {
+        super(x, y, colors, shapes, shapeQ, image, hasGravity, isMoveable, isPhysicsObject, gameManager);
     }
 
     @Override
