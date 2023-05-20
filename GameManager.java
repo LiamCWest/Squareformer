@@ -37,11 +37,9 @@ public class GameManager {
             new Polygon(new int[]{0,150,150,0}, new int[]{0,0,50,50}, 4)
         }, true, null, false, false, false, this));
 
-        gameObjects.add(new GameObject(250, 600, new Color[]{Color.BLUE}, new Polygon[]{
+        gameObjects.add(new GameObject(900, 600, new Color[]{Color.BLUE}, new Polygon[]{
             new Polygon(new int[]{0, 75, 75, 0}, new int[]{0, 0, 75, 75}, 4)
-        }, true, null, false, true, true, this));
-
-        System.out.println(player.isPhysicsObject);
+        }, true, null, true, true, true, this));
     }
 
     // update method, updates everything each frame
