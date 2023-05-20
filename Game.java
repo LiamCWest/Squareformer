@@ -35,6 +35,7 @@ public class Game extends JPanel{
         movementVector.add(0);  // Initialize index 0 with value 0
         movementVector.add(0);  // Initialize index 1 with value 0
 
+        // set the game thread
         gameThread = new Thread(() -> {
             while(true){
                 gameLoop();
@@ -52,7 +53,9 @@ public class Game extends JPanel{
 
     // method to start the game
     public void start(Boolean restart) {
-        running = true;
+        running = true; // Set running to true
+
+        // Start the game loop and restart if needed
         if(gameThread.getState() != Thread.State.NEW){
             gameThread = new Thread(() -> {
                 while(true){
@@ -173,7 +176,7 @@ public class Game extends JPanel{
         actionMap.put("escapeAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Call the escape action method in GameManager
+                // stop game and show pause menu
                 stop();
                 main.showPauseMenu();
             }

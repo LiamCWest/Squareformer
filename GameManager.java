@@ -44,8 +44,9 @@ public class GameManager {
 
     // update method, updates everything each frame
     public void update() {
-        // Move the player
-        player.moveForce(game.getMovementVector().get(0), 0);
+        player.moveForce(game.getMovementVector().get(0), 0); // Move the player
+
+        // if the player is jumping, jump
         if (isJumping) {
             player.jump();
             isJumping = false;

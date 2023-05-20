@@ -48,9 +48,12 @@ public class Main extends JFrame{
         });
     }
     
+    // method to create the menu panel
     public void createMainMenu(){
+        // Create the menu panel
         menuPanel = new Menu(this, Color.GREEN, null);
 
+        // Add the buttons to the menu panel
         menuPanel.addButton("Play", (a,b) -> {
             showGame(true);
             return 1;
@@ -62,9 +65,12 @@ public class Main extends JFrame{
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
     }
 
+    // method to create the pause panel
     public void createPauseMenu(){
+        // Create the pause panel
         pausePanel = new Menu(this, Color.BLUE, null);
 
+        // Add the buttons to the pause panel
         pausePanel.addButton("Resume", (a,b) -> {
             showGame(false);
             return 1;
@@ -103,16 +109,22 @@ public class Main extends JFrame{
         });
     }
 
+    // method to show the pause panel
     public void showPauseMenu(){
+        // Show the pause panel
         cardLayout.show(cardPanel, "pause");
 
+        // Set the focus to the pause panel
         KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         focusManager.focusNextComponent();
     }
 
+    // method to show the menu panel
     public void showMainMenu(){
+        // Show the menu panel
         cardLayout.show(cardPanel, "menu");
 
+        // Set the focus to the menu panel
         KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         focusManager.focusNextComponent();
     }
@@ -128,6 +140,7 @@ public class Main extends JFrame{
 
     // main method
     public static void main(String[] args) {
+        // Set the look and feel to the system look and feel
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
@@ -140,6 +153,7 @@ public class Main extends JFrame{
             e.printStackTrace();
         }
 
+        // Create the main frame
         SwingUtilities.invokeLater(Main::new);
     }
 }
