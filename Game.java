@@ -112,7 +112,7 @@ public class Game extends JPanel{
         }
 
         // Draw the off-screen buffer to the game panel
-        Graphics panelGraphics = getGraphics();
+        Graphics2D panelGraphics = (Graphics2D) getGraphics();
         if (panelGraphics != null) {
             panelGraphics.drawImage(offScreenBuffer, 0, 0, null);
             panelGraphics.dispose();
@@ -130,8 +130,8 @@ public class Game extends JPanel{
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "jumpAction");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), "leftAction");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), "rightAction");
+        inputMap.put(KeyStroke.getKeyStroke(MouseEvent.BUTTON1, 0), "mouseAction1");
 
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, true), "jumpActionRelease");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "leftActionRelease");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "rightActionRelease");
         
@@ -159,6 +159,14 @@ public class Game extends JPanel{
                 setMovementVector(0, 1);
             }
         });
+        actionMap.put("mouseAction1", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Call the mouse action method in GameManager
+                gameManager.mouseAction();
+            }
+        });
+
         actionMap.put("leftActionRelease", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

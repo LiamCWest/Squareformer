@@ -72,4 +72,8 @@ public class GameManager {
     public void setJump(Boolean jump) {
         isJumping = jump;
     }
+
+    public void mouseAction(){
+        player.grapple();
+    }
 }

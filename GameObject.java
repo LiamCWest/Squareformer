@@ -25,7 +25,7 @@ public class GameObject{
     private Rectangle hitbox;
 
     // constructors
-    public GameObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isMoveable, boolean isPhysicsObject, GameManager gameManager) {
+    public GameObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isMovable, boolean isPhysicsObject, GameManager gameManager) {
         // set the variables
         this.x = x;
         this.y = y;
@@ -35,7 +35,7 @@ public class GameObject{
         this.shapeQ = shapeQ;
         this.image = image;
         this.hasGravity = hasGravity;
-        this.isMoveable = isMoveable;
+        this.isMoveable = isMovable;
         this.isPhysicsObject = isPhysicsObject;
         this.gameManager = gameManager;
         this.velocity = new double[]{0, 0};
@@ -51,7 +51,7 @@ public class GameObject{
     }
 
     // method to draw the game object
-    public void draw(Graphics g) {
+    public void draw(Graphics2D g) {
         // if the game object is a shape, draw the shape, otherwise draw the image
         if (shapeQ) {
             moveShapes(); // Update the movedShapes array before drawing
@@ -85,8 +85,8 @@ public class GameObject{
             for(GameObject object : collidingObjects){
                 // check if the object is a physics object and apply force only if it is
                 if(object.isPhysicsObject){
-                    System.out.println(object.getVelocity()[0] + " " + object.getVelocity()[1]);
-                    applyForce(object.getVelocity()[0], object.getVelocity()[1]);
+                    System.out.println(object.getVelocity()[0]);
+                    applyForce(object.getVelocity()[0], 0);
                 }
             }
         }
@@ -247,5 +247,13 @@ public class GameObject{
     // getter method for the y position
     public int getY(){
         return y;
+    }
+
+    public boolean isShapeQ(){
+        return shapeQ;
+    }
+
+    public Polygon[] getShapes(){
+        return shapes;
     }
 }

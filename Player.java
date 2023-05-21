@@ -10,10 +10,12 @@ public class Player extends GameObject {
     private boolean isFalling = false;
     private double jumpForce = -3;
     private double moveForce = 8;
+    private Grapple grapple;
 
     // constructor
-    Player(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isMoveable, boolean isPhysicsObject, GameManager gameManager) {
-        super(x, y, colors, shapes, shapeQ, image, hasGravity, isMoveable, isPhysicsObject, gameManager); // Call the super constructor from GameObject
+    Player(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isMovable, boolean isPhysicsObject, GameManager gameManager) {
+        super(x, y, colors, shapes, shapeQ, image, hasGravity, isMovable, isPhysicsObject, gameManager); // Call the super constructor from GameObject
+        this.grapple = new Grapple(this, gameManager); // Create the grapple
     }
 
     // override the GameObject move method
@@ -53,6 +55,14 @@ public class Player extends GameObject {
         super.move();
     }
 
+    @Override
+    public void draw(Graphics2D g) {
+        // draw the grapple
+        grapple.draw(g);
+        // call the normal draw method from GameObject
+        super.draw(g);
+    }
+
     // method to jump
     public void jump() {
         // if the player is grounded, set jumping to true and falling to false
@@ -71,5 +81,9 @@ public class Player extends GameObject {
         }
         // apply the force
         applyForce(moveForce * xForce, moveForce * yForce);
+    }
+
+    public void grapple(){
+        grapple.startGrapple();
     }
 }
