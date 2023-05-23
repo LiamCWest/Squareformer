@@ -130,7 +130,6 @@ public class Game extends JPanel{
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0), "jumpAction");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0), "leftAction");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0), "rightAction");
-        inputMap.put(KeyStroke.getKeyStroke(MouseEvent.BUTTON1, 0), "mouseAction1");
 
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, true), "leftActionRelease");
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, true), "rightActionRelease");
@@ -159,14 +158,6 @@ public class Game extends JPanel{
                 setMovementVector(0, 1);
             }
         });
-        actionMap.put("mouseAction1", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Call the mouse action method in GameManager
-                gameManager.mouseAction();
-            }
-        });
-
         actionMap.put("leftActionRelease", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -187,6 +178,14 @@ public class Game extends JPanel{
                 // stop game and show pause menu
                 stop();
                 main.showPauseMenu();
+            }
+        });
+
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                // Call the mouse action method in GameManager
+                gameManager.mouseAction();
             }
         });
     }

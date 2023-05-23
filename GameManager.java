@@ -40,6 +40,8 @@ public class GameManager {
         gameObjects.add(new GameObject(900, 600, new Color[]{Color.BLUE}, new Polygon[]{
             new Polygon(new int[]{0, 75, 75, 0}, new int[]{0, 0, 75, 75}, 4)
         }, true, null, true, true, true, this));
+
+        System.out.println(gameObjects.toString());
     }
 
     // update method, updates everything each frame
