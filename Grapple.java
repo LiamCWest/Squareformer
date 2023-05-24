@@ -21,33 +21,38 @@ public class Grapple {
         Object[] hit = raycast(grapplePos, angle);
         GameObject hitObject = (GameObject)hit[0];
         double[] hitPoint = (double[])hit[1];
-        grappleLine.setLine(grapplePos[0], grapplePos[1], hitPoint[0], hitPoint[1]);
-        System.out.println(hit != null ? hitObject + " " + hitPoint[0] + " " + hitPoint[1] : "null");
+        if(hitPoint != null) grappleLine.setLine(grapplePos[0], grapplePos[1], hitPoint[0], hitPoint[1]);
     }
 
     public void draw(Graphics2D g){
-        g.setColor(Color.GRAY);
-        Stroke stroke = g.getStroke();
-        g.setStroke(new BasicStroke(7));
-
         double angle = getAngle();
         int length = 15;
-
+        
         int xMod = (int)(Math.cos(angle)*length);
         int yMod = (int)(Math.sin(angle)*length);
         
+        Stroke stroke = g.getStroke();
+        g.setColor(Color.PINK);
+        g.setStroke(new BasicStroke(3));
         g.draw(grappleLine);
+        g.setColor(Color.GRAY);
+        g.setStroke(new BasicStroke(7));
         g.drawLine(grapplePos[0], grapplePos[1], grapplePos[0]+xMod, grapplePos[1]+yMod);
         g.setStroke(stroke);
     }
 
-    private double getAngle(){
-        mousePos = MouseInfo.getPointerInfo().getLocation();
+    private double getAngle() {
+        Point mousePos = MouseInfo.getPointerInfo().getLocation();
+        Point gamePos = gameManager.getGameWindow().getLocationOnScreen();
+        Point relativeMousePos = new Point((int)(mousePos.getX() - gamePos.getX()), (int)(mousePos.getY() - gamePos.getY()));
 
-        grapplePos[0] = holder.getX()+(int)holder.getHitbox().getWidth();
-        grapplePos[1] = holder.getY()+(int)holder.getHitbox().getHeight()/4;
-        
-        return Math.atan2(mousePos.getY()-grapplePos[1], mousePos.getX()-grapplePos[0]);
+        grapplePos[0] = holder.getX() + (int)holder.getHitbox().getWidth();
+        grapplePos[1] = holder.getY() + (int)holder.getHitbox().getHeight() / 4;
+
+        double xDiff = relativeMousePos.getX() - grapplePos[0];
+        double yDiff = relativeMousePos.getY() - grapplePos[1];
+
+        return Math.atan2(yDiff, xDiff);
     }
 
     public Object[] raycast (int[] point, double angle){

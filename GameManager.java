@@ -2,6 +2,8 @@
 import java.awt.*;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 // game manager class
 public class GameManager {
     // private variables for the game objects, player, game, and jumping
@@ -40,8 +42,6 @@ public class GameManager {
         gameObjects.add(new GameObject(900, 600, new Color[]{Color.BLUE}, new Polygon[]{
             new Polygon(new int[]{0, 75, 75, 0}, new int[]{0, 0, 75, 75}, 4)
         }, true, null, true, true, true, this));
-
-        System.out.println(gameObjects.toString());
     }
 
     // update method, updates everything each frame
@@ -77,5 +77,9 @@ public class GameManager {
 
     public void mouseAction(){
         player.grapple();
+    }
+
+    public JFrame getGameWindow(){
+        return game.getGameWindow();
     }
 }

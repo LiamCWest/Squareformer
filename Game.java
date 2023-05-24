@@ -204,4 +204,8 @@ public class Game extends JPanel{
     public void jump(){
         gameManager.setJump(true);
     }
+
+    public JFrame getGameWindow(){
+        return main;
+    }
 }
