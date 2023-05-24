@@ -42,7 +42,7 @@ public class Grapple {
     }
 
     private double getAngle() {
-        Point mousePos = MouseInfo.getPointerInfo().getLocation();
+        mousePos = MouseInfo.getPointerInfo().getLocation();
         Point gamePos = gameManager.getGameWindow().getLocationOnScreen();
         Point relativeMousePos = new Point((int)(mousePos.getX() - gamePos.getX()), (int)(mousePos.getY() - gamePos.getY()));
 
