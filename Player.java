@@ -21,6 +21,13 @@ public class Player extends GameObject {
     // override the GameObject move method
     @Override
     public void move() {
+        // if the player is grappling, move the grapple
+        if(grapple.isGrappling()){
+            super.setHasGravity(false);
+            grapple.move();
+        }
+        else super.setHasGravity(true);
+
         // if the player is grounded, set the current jump height to 0 and set falling to false
         if (super.isGrounded()) {
             currentJumpHeight = 0;
@@ -47,7 +54,7 @@ public class Player extends GameObject {
             }
         }
         // if the player is falling, apply a small force downwards
-        else if (isFalling) {
+        else if (isFalling && super.hasGravity()) {
             setVelocity(getVelocity()[0], 0.05);
         }
 
@@ -84,6 +91,7 @@ public class Player extends GameObject {
     }
 
     public void grapple(){
-        grapple.startGrapple();
+        if(grapple.isGrappling()) grapple.endGrapple();
+        else grapple.startGrapple();
     }
 }

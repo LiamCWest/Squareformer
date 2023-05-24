@@ -256,4 +256,12 @@ public class GameObject{
     public Polygon[] getShapes(){
         return shapes;
     }
+
+    public boolean hasGravity(){
+        return hasGravity;
+    }
+
+    public void setHasGravity(boolean hasGravity){
+        this.hasGravity = hasGravity;
+    }
 }

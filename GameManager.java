@@ -39,6 +39,10 @@ public class GameManager {
             new Polygon(new int[]{0,150,150,0}, new int[]{0,0,50,50}, 4)
         }, true, null, false, false, false, this));
 
+        gameObjects.add(new GameObject(600, 200, new Color[]{Color.BLACK}, new Polygon[]{
+            new Polygon(new int[]{0,150,150,0}, new int[]{0,0,50,50}, 4)
+        }, true, null, false, false, false, this));
+
         gameObjects.add(new GameObject(900, 600, new Color[]{Color.BLUE}, new Polygon[]{
             new Polygon(new int[]{0, 75, 75, 0}, new int[]{0, 0, 75, 75}, 4)
         }, true, null, true, true, true, this));

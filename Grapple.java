@@ -7,7 +7,11 @@ public class Grapple {
     private GameObject holder;
     private GameManager gameManager;
     private Point mousePos;
+    private GameObject hitObject;
+    private double[] hitPoint;
+    private boolean isGrappling = false;
     private int[] grapplePos = new int[2];
+    private double grappleSpeed = 5;
     Line2D grappleLine = new Line2D.Double();
 
     public Grapple(GameObject holder, GameManager gameManager){
@@ -16,43 +20,67 @@ public class Grapple {
     }
 
     public void startGrapple(){
-        double angle = getAngle();
+        Point relativeMousePos = getMoisePoint();
+        double angle = getAngle(new Point(grapplePos[0], grapplePos[1]), relativeMousePos);
 
         Object[] hit = raycast(grapplePos, angle);
-        GameObject hitObject = (GameObject)hit[0];
-        double[] hitPoint = (double[])hit[1];
-        if(hitPoint != null) grappleLine.setLine(grapplePos[0], grapplePos[1], hitPoint[0], hitPoint[1]);
+        hitObject = (GameObject)hit[0];
+        hitPoint = (double[])hit[1];
+        if(hitPoint != null) isGrappling = true;
+    }
+
+    public void endGrapple(){
+        isGrappling = false;
+    }
+
+    public void move(){
+        if(isGrappling){
+            double angle = getAngle(new Point(grapplePos[0], grapplePos[1]), new Point((int)hitPoint[0], (int)hitPoint[1]));
+            double xDir = Math.cos(angle);
+            double yDir = Math.sin(angle);
+
+            holder.setVelocity(xDir*grappleSpeed, yDir*grappleSpeed);
+        }
     }
 
     public void draw(Graphics2D g){
-        double angle = getAngle();
+        grapplePos[0] = holder.getX() + (int)holder.getHitbox().getWidth();
+        grapplePos[1] = holder.getY() + (int)holder.getHitbox().getHeight() / 4;
+        
+        Point point2 = isGrappling ? new Point((int)hitPoint[0], (int)hitPoint[1]) : getMoisePoint();
+        double angle = getAngle(new Point(grapplePos[0], grapplePos[1]), point2);
         int length = 15;
         
         int xMod = (int)(Math.cos(angle)*length);
         int yMod = (int)(Math.sin(angle)*length);
         
         Stroke stroke = g.getStroke();
-        g.setColor(Color.PINK);
-        g.setStroke(new BasicStroke(3));
-        g.draw(grappleLine);
+        
+        if(isGrappling){
+            grappleLine.setLine(grapplePos[0], grapplePos[1], hitPoint[0], hitPoint[1]);
+
+            g.setColor(Color.PINK);
+            g.setStroke(new BasicStroke(3));
+            g.draw(grappleLine);
+        }
+
         g.setColor(Color.GRAY);
         g.setStroke(new BasicStroke(7));
         g.drawLine(grapplePos[0], grapplePos[1], grapplePos[0]+xMod, grapplePos[1]+yMod);
         g.setStroke(stroke);
     }
 
-    private double getAngle() {
-        mousePos = MouseInfo.getPointerInfo().getLocation();
-        Point gamePos = gameManager.getGameWindow().getLocationOnScreen();
-        Point relativeMousePos = new Point((int)(mousePos.getX() - gamePos.getX()), (int)(mousePos.getY() - gamePos.getY()));
-
-        grapplePos[0] = holder.getX() + (int)holder.getHitbox().getWidth();
-        grapplePos[1] = holder.getY() + (int)holder.getHitbox().getHeight() / 4;
-
-        double xDiff = relativeMousePos.getX() - grapplePos[0];
-        double yDiff = relativeMousePos.getY() - grapplePos[1];
+    private double getAngle(Point point1, Point point2) {
+        double xDiff = point2.getX() - point1.getX();
+        double yDiff = point2.getY() - point1.getY();
 
         return Math.atan2(yDiff, xDiff);
+    }
+
+    private Point getMoisePoint(){
+        mousePos = MouseInfo.getPointerInfo().getLocation();
+        Point gamePos = gameManager.getGameWindow().getLocationOnScreen();
+        return new Point((int)(mousePos.getX() - gamePos.getX()), (int)(mousePos.getY() - gamePos.getY()));
     }
 
     public Object[] raycast (int[] point, double angle){
@@ -101,5 +129,9 @@ public class Grapple {
 
     private boolean hitObject(double x, double y, Rectangle hitbox){
         return x >= hitbox.getX() && x <= hitbox.getX()+hitbox.getWidth() && y >= hitbox.getY() && y <= hitbox.getY()+hitbox.getHeight();
+    }
+
+    public boolean isGrappling(){
+        return isGrappling;
     }
 }
