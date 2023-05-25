@@ -39,7 +39,7 @@ public class Grapple {
             double xDir = Math.cos(angle);
             double yDir = Math.sin(angle);
 
-            holder.setVelocity(xDir*grappleSpeed, yDir*grappleSpeed);
+            holder.setVelocity(xDir*grappleSpeed, yDir*grappleSpeed*0.2);
         }
     }
 
