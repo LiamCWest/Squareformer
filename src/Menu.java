@@ -1,3 +1,4 @@
+package src;
 // imports for swing and awt
 import java.awt.*;
 import javax.swing.*;

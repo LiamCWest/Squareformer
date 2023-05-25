@@ -1,3 +1,4 @@
+package src;
 // basic swing imports
 import java.awt.*;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class GameManager {
     public void update() {
         // update all the game objects positions
         for (GameObject gameObject : gameObjects) {
-            // gameObject.move();
+            gameObject.update();
         }
     }
 

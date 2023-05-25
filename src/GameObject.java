@@ -1,13 +1,16 @@
+package src;
 // import awt and arraylist
 import java.awt.*;
 import java.util.ArrayList;
+
+import src.Components.*;
 
 // game object class
 public class GameObject{
     // variables for movement, rendering, and collision
     private int x;
     private int y;
-    public double[] velocity;
+    private double[] velocity;
     private Polygon[] shapes;
     private Polygon[] movedShapes;
     private Color[] colors;
@@ -20,6 +23,7 @@ public class GameObject{
 
     private Rectangle hitboxShape;
     private Rectangle hitbox;
+    private ArrayList<ObjectComponent> components = new ArrayList<>();
 
     // constructors
     public GameObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isMovable, boolean isPhysicsObject, GameManager gameManager) {
@@ -46,6 +50,21 @@ public class GameObject{
         else this.hitbox = new Rectangle(x, y, image != null ? image.getWidth(null) : 0, image != null ? image.getHeight(null) : 0);
     }
 
+
+    // add a component to the components list
+    public void addComponent(ObjectComponent component) {
+        components.add(component);
+    }
+    
+    public <T extends ObjectComponent> T getComponent(Class<T> componentType) {
+        for (ObjectComponent component : components) {
+            if (componentType.isInstance(component)) {
+                return componentType.cast(component);
+            }
+        }
+        return null;
+    }
+
     // method to draw the game object
     public void draw(Graphics2D g) {
         // if the game object is a shape, draw the shape, otherwise draw the image
@@ -59,6 +78,20 @@ public class GameObject{
         } else {
             g.drawImage(image, x, y, null); // Draw the image
         }
+    }
+
+    public void update(){
+        for (ObjectComponent component : components) {
+            component.update();
+        }
+
+        move();
+    }
+    
+    public void move(){
+        x += velocity[0];
+        y += velocity[1];
+        hitbox = moveHitbox(x, y);
     }
 
     // method to move the shapes of the game object
@@ -149,5 +182,26 @@ public class GameObject{
 
     public void setHasGravity(boolean hasGravity){
         this.hasGravity = hasGravity;
+    }
+
+    public GameManager getGameManager(){
+        return this.gameManager;
+    }
+
+    public double[] getVelocity(){
+        return this.velocity;
+    }
+
+    public boolean isPhysicsObject(){
+        return this.isPhysicsObject;
+    }
+
+    public void setVelocity(double[] velocity){
+        this.velocity = velocity;
+    }
+
+    public void addForce(double[] force){
+        this.velocity[0] += force[0];
+        this.velocity[1] += force[1];
     }
 }
