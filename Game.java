@@ -141,35 +141,30 @@ public class Game extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Call the jump action method in GameManager
-                gameManager.setJump(true);
             }
         });
         actionMap.put("leftAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Set the movement vector to move left
-                setMovementVector(0, -1);
             }
         });
         actionMap.put("rightAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Set the movement vector to move right
-                setMovementVector(0, 1);
             }
         });
         actionMap.put("leftActionRelease", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Set the movement vector to stop moving left
-                setMovementVector(0, 0);
             }
         });
         actionMap.put("rightActionRelease", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Set the movement vector to stop moving right
-                setMovementVector(0, 0);
             }
         });
         actionMap.put("escapeAction", new AbstractAction() {
@@ -188,21 +183,6 @@ public class Game extends JPanel{
                 gameManager.mouseAction();
             }
         });
-    }
-
-    // method to get the movement vector
-    public Vector<Integer> getMovementVector() {
-        return movementVector;
-    }
-
-    // method to set the movement vector
-    public void setMovementVector(int index, int value) {
-        movementVector.set(index, value);
-    }
-
-    // call the jump method in GameManager
-    public void jump(){
-        gameManager.setJump(true);
     }
 
     public JFrame getGameWindow(){

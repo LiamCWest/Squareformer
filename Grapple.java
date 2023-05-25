@@ -38,8 +38,6 @@ public class Grapple {
             double angle = getAngle(new Point(grapplePos[0], grapplePos[1]), new Point((int)hitPoint[0], (int)hitPoint[1]));
             double xDir = Math.cos(angle);
             double yDir = Math.sin(angle);
-
-            holder.setVelocity(xDir*grappleSpeed, yDir*grappleSpeed*0.2);
         }
     }
 

@@ -10,7 +10,6 @@ public class GameManager {
     private ArrayList<GameObject> gameObjects;
     private Player player;
     private Game game;
-    private boolean isJumping = false;
 
     // constructor
     public GameManager(Game game) {
@@ -50,17 +49,9 @@ public class GameManager {
 
     // update method, updates everything each frame
     public void update() {
-        player.moveForce(game.getMovementVector().get(0), 0); // Move the player
-
-        // if the player is jumping, jump
-        if (isJumping) {
-            player.jump();
-            isJumping = false;
-        }
-
         // update all the game objects positions
         for (GameObject gameObject : gameObjects) {
-            gameObject.move();
+            // gameObject.move();
         }
     }
 
@@ -72,11 +63,6 @@ public class GameManager {
     // setter method for the game objects array list
     public void setGameObjects(ArrayList<GameObject> gameObjects) {
         this.gameObjects = gameObjects;
-    }
-
-    // sets the jumping boolean
-    public void setJump(Boolean jump) {
-        isJumping = jump;
     }
 
     public void mouseAction(){
