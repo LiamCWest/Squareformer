@@ -3,6 +3,7 @@ package src.Components;
 import java.awt.*;
 import java.util.ArrayList;
 
+import src.Game;
 import src.GameObject;
 
 public class CollisionComponent implements ObjectComponent{
@@ -55,11 +56,44 @@ public class CollisionComponent implements ObjectComponent{
             }
         }
 
-        handleCollision(leftCollisions, rightCollisions, topCollisions, bottomCollisions);
+        handleAllCollisions(leftCollisions, rightCollisions, topCollisions, bottomCollisions);
     }
 
-    public void handleCollision(ArrayList<GameObject> leftCollisions, ArrayList<GameObject> rightCollisions, ArrayList<GameObject> topCollisions, ArrayList<GameObject> bottomCollisions){
+    public void handleAllCollisions(ArrayList<GameObject> leftCollisions, ArrayList<GameObject> rightCollisions, ArrayList<GameObject> topCollisions, ArrayList<GameObject> bottomCollisions){
+        ArrayList<ArrayList<GameObject>> collisions = new ArrayList<>();
+        if(leftCollisions.size() > 0) collisions.add(leftCollisions);
+        if(rightCollisions.size() > 0) collisions.add(rightCollisions);
+        if(topCollisions.size() > 0) collisions.add(topCollisions);
+        if(bottomCollisions.size() > 0) collisions.add(bottomCollisions);
 
+        for(ArrayList<GameObject> collideArray : collisions){
+            for(GameObject object : collideArray){
+                handleCollision(object, collisions.indexOf(collideArray));
+            }
+        }
+    }
+
+    private void handleCollision(GameObject object, int side){
+        if(object.isPhysicsObject && object.isMoveable()){
+
+        }
+        else{
+            //fix this
+            switch(side){
+                case 0:
+                    this.object.setVelocity(new double[]{0, this.object.getVelocity()[1]});
+                    break;
+                case 1:
+                    this.object.setVelocity(new double[]{0, this.object.getVelocity()[1]});
+                    break;
+                case 2:
+                    this.object.setVelocity(new double[]{this.object.getVelocity()[0], 0});
+                    break;
+                case 3:
+                    this.object.setVelocity(new double[]{this.object.getVelocity()[0], 0});
+                    break;
+            }
+        }
     }
 
     public boolean collidesWith(GameObject object, GameObject other) {

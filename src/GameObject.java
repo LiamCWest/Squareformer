@@ -214,4 +214,8 @@ public class GameObject{
     public ArrayList<ObjectComponent> getComponents(){
         return this.components;
     }
+
+    public boolean isMoveable(){
+        return this.isMoveable;
+    }
 }
