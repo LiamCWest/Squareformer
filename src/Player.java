@@ -8,12 +8,12 @@ public class Player extends GameObject {
     // private variables for jumping and moving
     private Grapple grapple;
     // constructor
+
     Player(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isMovable, boolean isPhysicsObject, GameManager gameManager) {
         super(x, y, colors, shapes, shapeQ, image, hasGravity, isMovable, isPhysicsObject, gameManager); // Call the super constructor from GameObject
         this.grapple = new Grapple(this, gameManager); // Create the grapple
 
-        addComponent(new GravityComponent(this)); // Add the gravity component
-        addComponent(new CollisionComponent(this)); // Add the collision component
+        addComponent(new PlayerMovementComponent(this), getComponents().size()-2); // Add the player movement component
     }
 
     @Override

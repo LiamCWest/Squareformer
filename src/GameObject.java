@@ -48,12 +48,18 @@ public class GameObject{
         }
         // else set the hitbox to the image size
         else this.hitbox = new Rectangle(x, y, image != null ? image.getWidth(null) : 0, image != null ? image.getHeight(null) : 0);
+
+        if(hasGravity){
+            addComponent(new CollisionComponent(this), -1); // Add the collision component
+            addComponent(new GravityComponent(this), -1); // Add the gravity component
+        }
     }
 
 
     // add a component to the components list
-    public void addComponent(ObjectComponent component) {
-        components.add(component);
+    public void addComponent(ObjectComponent component, int index) {
+        if(index == -1) components.add(component);
+        else components.add(index, component);
     }
     
     public <T extends ObjectComponent> T getComponent(Class<T> componentType) {
@@ -203,5 +209,9 @@ public class GameObject{
     public void addForce(double[] force){
         this.velocity[0] += force[0];
         this.velocity[1] += force[1];
+    }
+
+    public ArrayList<ObjectComponent> getComponents(){
+        return this.components;
     }
 }

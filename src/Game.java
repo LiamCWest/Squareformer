@@ -148,24 +148,28 @@ public class Game extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Set the movement vector to move left
+                gameManager.setMoveDirection(-1);
             }
         });
         actionMap.put("rightAction", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Set the movement vector to move right
+                gameManager.setMoveDirection(1);
             }
         });
         actionMap.put("leftActionRelease", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Set the movement vector to stop moving left
+                gameManager.setMoveDirection(0);
             }
         });
         actionMap.put("rightActionRelease", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Set the movement vector to stop moving right
+                gameManager.setMoveDirection(0);
             }
         });
         actionMap.put("escapeAction", new AbstractAction() {

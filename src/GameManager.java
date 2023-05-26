@@ -11,6 +11,7 @@ public class GameManager {
     private ArrayList<GameObject> gameObjects;
     private Player player;
     private Game game;
+    private int moveDirection = 0;
 
     // constructor
     public GameManager(Game game) {
@@ -72,5 +73,13 @@ public class GameManager {
 
     public JFrame getGameWindow(){
         return game.getGameWindow();
+    }
+
+    public void setMoveDirection(int moveDirection){
+        this.moveDirection = moveDirection;
+    }
+
+    public int getMoveDirection(){
+        return moveDirection;
     }
 }
