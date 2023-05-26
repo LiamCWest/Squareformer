@@ -37,11 +37,15 @@ public class CollisionComponent implements ObjectComponent{
 
         for (GameObject other : collisions) {
             Rectangle otherHitbox = other.getHitbox();
-            boolean colRight = hitbox.getMaxX() > otherHitbox.getMinX() && velocity[0] > 0;
-            boolean colLeft = hitbox.getMinX() < otherHitbox.getMaxX() && velocity[0] < 0;
-            boolean colBottom = hitbox.getMaxY() > otherHitbox.getMinY() && velocity[1] > 0;
+            boolean rightXCheck = hitbox.getMaxX()+1 > otherHitbox.getMinX();
+            boolean leftXCheck = hitbox.getMinX()-1 < otherHitbox.getMaxX();
+            boolean yCheck = isBetween(hitbox.getMinY(), hitbox.getMaxY(), otherHitbox.getMinY(), otherHitbox.getMaxY());
+            
+            boolean colRight = yCheck && rightXCheck && velocity[0] > 0;
+            boolean colLeft = yCheck && leftXCheck && velocity[0] < 0;
+            boolean colBottom = hitbox.getMaxY()+1 > otherHitbox.getMinY() && velocity[1] > 0;
             boolean colTop = hitbox.getMinY() < otherHitbox.getMaxY() && velocity[1] < 0;
-
+            
             if (colLeft) {
                 leftCollisions.add(other);
             }
@@ -59,38 +63,43 @@ public class CollisionComponent implements ObjectComponent{
         handleAllCollisions(leftCollisions, rightCollisions, topCollisions, bottomCollisions);
     }
 
-    public void handleAllCollisions(ArrayList<GameObject> leftCollisions, ArrayList<GameObject> rightCollisions, ArrayList<GameObject> topCollisions, ArrayList<GameObject> bottomCollisions){
-        ArrayList<ArrayList<GameObject>> collisions = new ArrayList<>();
-        if(leftCollisions.size() > 0) collisions.add(leftCollisions);
-        if(rightCollisions.size() > 0) collisions.add(rightCollisions);
-        if(topCollisions.size() > 0) collisions.add(topCollisions);
-        if(bottomCollisions.size() > 0) collisions.add(bottomCollisions);
+    private boolean isBetween(double min1, double max1, double min2, double max2){
+        return (min1 < max2 && min1 > min2) || (max1 > min2 && max1 < max2);
+    }
 
-        for(ArrayList<GameObject> collideArray : collisions){
+    public void handleAllCollisions(ArrayList<GameObject> leftCollisions, ArrayList<GameObject> rightCollisions, ArrayList<GameObject> topCollisions, ArrayList<GameObject> bottomCollisions){
+        ArrayList<GameObject>[] collisions = new ArrayList[4];
+        collisions[0] = leftCollisions;
+        collisions[1] = rightCollisions;
+        collisions[2] = topCollisions;
+        collisions[3] = bottomCollisions;
+
+        for(int i = 0; i < collisions.length; i++){
+            ArrayList<GameObject> collideArray = collisions[i];
             for(GameObject object : collideArray){
-                handleCollision(object, collisions.indexOf(collideArray));
+                handleCollision(object, i);
             }
         }
     }
 
-    private void handleCollision(GameObject object, int side){
-        if(object.isPhysicsObject && object.isMoveable()){
+    private void handleCollision(GameObject colObject, int side){
+        if(colObject.isPhysicsObject && colObject.isMoveable()){
 
         }
         else{
             //fix this
             switch(side){
                 case 0:
-                    this.object.setVelocity(new double[]{0, this.object.getVelocity()[1]});
+                    object.setVelocity(new double[]{0, object.getVelocity()[1]});
                     break;
                 case 1:
-                    this.object.setVelocity(new double[]{0, this.object.getVelocity()[1]});
+                    object.setVelocity(new double[]{0, object.getVelocity()[1]});
                     break;
                 case 2:
-                    this.object.setVelocity(new double[]{this.object.getVelocity()[0], 0});
+                    object.setVelocity(new double[]{object.getVelocity()[0], 0});
                     break;
                 case 3:
-                    this.object.setVelocity(new double[]{this.object.getVelocity()[0], 0});
+                    object.setVelocity(new double[]{object.getVelocity()[0], 0});
                     break;
             }
         }
@@ -98,7 +107,8 @@ public class CollisionComponent implements ObjectComponent{
 
     public boolean collidesWith(GameObject object, GameObject other) {
         // Get the hitboxes of both objects
-        Rectangle hitbox1 = object.getHitbox();
+        Rectangle hitbox0 = object.getHitbox();
+        Rectangle hitbox1 = new Rectangle(hitbox0.x + (int) object.getVelocity()[0], hitbox0.y + (int) object.getVelocity()[1], hitbox0.width, hitbox0.height + 1);
         Rectangle hitbox2 = other.getHitbox();
 
         // Check if the hitboxes intersect
