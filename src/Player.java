@@ -13,7 +13,7 @@ public class Player extends GameObject {
         super(x, y, colors, shapes, shapeQ, image, hasGravity, isMovable, isPhysicsObject, gameManager); // Call the super constructor from GameObject
         this.grapple = new Grapple(this, gameManager); // Create the grapple
 
-        addComponent(new PlayerMovementComponent(this), getComponents().size()-2); // Add the player movement component
+        addComponent(new PlayerMovementComponent(this), getComponents().size()-3); // Add the player movement component
     }
 
     @Override

@@ -36,7 +36,6 @@ public class GameObject{
         this.shapeQ = shapeQ;
         this.image = image;
         this.hasGravity = hasGravity;
-        this.isMoveable = isMovable;
         this.isPhysicsObject = isPhysicsObject;
         this.gameManager = gameManager;
         this.velocity = new double[]{0, 0};
@@ -53,8 +52,10 @@ public class GameObject{
             addComponent(new CollisionComponent(this), -1); // Add the collision component
             addComponent(new GravityComponent(this), -1); // Add the gravity component
         }
+        if(isPhysicsObject){
+            addComponent(new ForceRegulationComponent(this, 1), -1); // Add the physics component
+        }
     }
-
 
     // add a component to the components list
     public void addComponent(ObjectComponent component, int index) {

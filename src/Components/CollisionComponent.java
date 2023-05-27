@@ -3,7 +3,6 @@ package src.Components;
 import java.awt.*;
 import java.util.ArrayList;
 
-import src.Game;
 import src.GameObject;
 
 public class CollisionComponent implements ObjectComponent{
@@ -37,13 +36,13 @@ public class CollisionComponent implements ObjectComponent{
 
         for (GameObject other : collisions) {
             Rectangle otherHitbox = other.getHitbox();
-            boolean rightXCheck = hitbox.getMaxX()+1 > otherHitbox.getMinX();
-            boolean leftXCheck = hitbox.getMinX()-1 < otherHitbox.getMaxX();
+            boolean rightXCheck = hitbox.getMaxX()+1 > otherHitbox.getMinX() && !(hitbox.getMinX()+1 >= otherHitbox.getMaxX());
+            boolean leftXCheck = hitbox.getMinX() < otherHitbox.getMaxX() && !(hitbox.getMaxX() <= otherHitbox.getMinX());
             boolean yCheck = isBetween(hitbox.getMinY(), hitbox.getMaxY(), otherHitbox.getMinY(), otherHitbox.getMaxY());
             
             boolean colRight = yCheck && rightXCheck && velocity[0] > 0;
             boolean colLeft = yCheck && leftXCheck && velocity[0] < 0;
-            boolean colBottom = hitbox.getMaxY()+1 > otherHitbox.getMinY() && velocity[1] > 0;
+            boolean colBottom = hitbox.getMaxY()+1 > otherHitbox.getMinY() && !(hitbox.getMaxY() > otherHitbox.getMaxY()) && velocity[1] > 0;
             boolean colTop = hitbox.getMinY() < otherHitbox.getMaxY() && velocity[1] < 0;
             
             if (colLeft) {
@@ -83,25 +82,15 @@ public class CollisionComponent implements ObjectComponent{
     }
 
     private void handleCollision(GameObject colObject, int side){
-        if(colObject.isPhysicsObject && colObject.isMoveable()){
-
-        }
-        else{
-            //fix this
-            switch(side){
-                case 0:
-                    object.setVelocity(new double[]{0, object.getVelocity()[1]});
-                    break;
-                case 1:
-                    object.setVelocity(new double[]{0, object.getVelocity()[1]});
-                    break;
-                case 2:
-                    object.setVelocity(new double[]{object.getVelocity()[0], 0});
-                    break;
-                case 3:
-                    object.setVelocity(new double[]{object.getVelocity()[0], 0});
-                    break;
-            }
+        switch(side){
+            case 0:
+            case 1:
+                object.setVelocity(new double[]{0, object.getVelocity()[1]});
+                break;
+            case 2:
+            case 3:
+                object.setVelocity(new double[]{object.getVelocity()[0], 0});
+                break;
         }
     }
 

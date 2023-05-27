@@ -12,6 +12,7 @@ public class GameManager {
     private Player player;
     private Game game;
     private int moveDirection = 0;
+    private boolean jump = false;
 
     // constructor
     public GameManager(Game game) {
@@ -43,10 +44,6 @@ public class GameManager {
         gameObjects.add(new GameObject(600, 200, new Color[]{Color.BLACK}, new Polygon[]{
             new Polygon(new int[]{0,150,150,0}, new int[]{0,0,50,50}, 4)
         }, true, null, false, false, false, this));
-
-        gameObjects.add(new GameObject(900, 600, new Color[]{Color.BLUE}, new Polygon[]{
-            new Polygon(new int[]{0, 75, 75, 0}, new int[]{0, 0, 75, 75}, 4)
-        }, true, null, true, true, true, this));
     }
 
     // update method, updates everything each frame
@@ -81,5 +78,13 @@ public class GameManager {
 
     public int getMoveDirection(){
         return moveDirection;
+    }
+
+    public void setJump(boolean jump){
+        this.jump = jump;
+    }
+
+    public boolean getJump(){
+        return jump;
     }
 }

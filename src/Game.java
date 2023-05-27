@@ -142,6 +142,7 @@ public class Game extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Call the jump action method in GameManager
+                gameManager.setJump(true);
             }
         });
         actionMap.put("leftAction", new AbstractAction() {
