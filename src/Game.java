@@ -1,6 +1,9 @@
 package src;
 // basic imports for swing and graphics
 import javax.swing.*;
+
+import src.Objects.GameObject;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -49,25 +52,27 @@ public class Game extends JPanel{
 
     // method to freeze the game
     public void stop() {
+        // Stop the game loop by setting running to false
         running = false;
     }
 
     // method to start the game
     public void start(Boolean restart) {
-        running = true; // Set running to true
-
         // Start the game loop and restart if needed
-        if(gameThread.getState() != Thread.State.NEW){
+        if(restart){
+            gameManager.setGameObjects(new ArrayList<GameObject>());
+            gameManager.start();
+
+            if(gameThread != null && gameThread.isAlive()){
+                gameThread.interrupt();
+            }
             gameThread = new Thread(() -> {
-                while(true){
+                while(running){
                     gameLoop();
                 }
             });
         }
-        if(restart){
-            gameManager.setGameObjects(new ArrayList<GameObject>());
-            gameManager.start();
-        }
+        running = true;
         gameThread.start();
     }
 

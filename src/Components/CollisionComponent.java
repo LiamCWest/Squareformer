@@ -3,7 +3,7 @@ package src.Components;
 import java.awt.*;
 import java.util.ArrayList;
 
-import src.GameObject;
+import src.Objects.GameObject;
 
 public class CollisionComponent implements ObjectComponent{
     private GameObject object;
@@ -21,7 +21,7 @@ public class CollisionComponent implements ObjectComponent{
         // Check for collisions with other objects
         ArrayList<GameObject> collisions = new ArrayList<>();
         for (GameObject other : object.getGameManager().getGameObjects()) {
-            if (other != object && collidesWith(object, other)) {
+            if (other != object && collidesWith(object, other) && other.isCollisionObject()) {
                 collisions.add(other);
             }
         }
@@ -36,13 +36,13 @@ public class CollisionComponent implements ObjectComponent{
 
         for (GameObject other : collisions) {
             Rectangle otherHitbox = other.getHitbox();
-            boolean rightXCheck = hitbox.getMaxX()+2 > otherHitbox.getMinX() && !(hitbox.getMinX()+1 >= otherHitbox.getMaxX());
+            boolean rightXCheck = hitbox.getMaxX()+1 > otherHitbox.getMinX() && !(hitbox.getMinX()+1 >= otherHitbox.getMaxX());
             boolean leftXCheck = hitbox.getMinX() < otherHitbox.getMaxX() && !(hitbox.getMaxX() <= otherHitbox.getMinX());
             boolean yCheck = isBetween(hitbox.getMinY(), hitbox.getMaxY(), otherHitbox.getMinY(), otherHitbox.getMaxY());
             
             boolean colRight = yCheck && rightXCheck && velocity[0] > 0;
             boolean colLeft = yCheck && leftXCheck && velocity[0] < 0;
-            boolean colBottom = hitbox.getMaxY()+1 > otherHitbox.getMinY() && !(hitbox.getMaxY() > otherHitbox.getMaxY()) && !(colLeft || colRight) && velocity[1] > 0;
+            boolean colBottom = hitbox.getMaxY()+1 > otherHitbox.getMinY() && !(hitbox.getMaxY() > otherHitbox.getMaxY()) && velocity[1] > 0;
             boolean colTop = hitbox.getMinY() < otherHitbox.getMaxY() && velocity[1] < 0;
             
             if (colLeft) {
@@ -67,7 +67,9 @@ public class CollisionComponent implements ObjectComponent{
     }
 
     public void handleAllCollisions(ArrayList<GameObject> leftCollisions, ArrayList<GameObject> rightCollisions, ArrayList<GameObject> topCollisions, ArrayList<GameObject> bottomCollisions){
+        @SuppressWarnings("unchecked")
         ArrayList<GameObject>[] collisions = new ArrayList[4];
+
         collisions[0] = leftCollisions;
         collisions[1] = rightCollisions;
         collisions[2] = topCollisions;
@@ -97,7 +99,7 @@ public class CollisionComponent implements ObjectComponent{
     public boolean collidesWith(GameObject object, GameObject other) {
         // Get the hitboxes of both objects
         Rectangle hitbox0 = object.getHitbox();
-        Rectangle hitbox1 = new Rectangle(hitbox0.x + (int) object.getVelocity()[0], hitbox0.y + (int) object.getVelocity()[1], hitbox0.width+1, hitbox0.height + 1);
+        Rectangle hitbox1 = new Rectangle(hitbox0.x + (int) object.getVelocity()[0], hitbox0.y + (int) object.getVelocity()[1], hitbox0.width, hitbox0.height + 1);
         Rectangle hitbox2 = other.getHitbox();
 
         // Check if the hitboxes intersect

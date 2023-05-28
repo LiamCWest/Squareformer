@@ -1,6 +1,6 @@
 package src.Components;
 
-import src.GameObject;
+import src.Objects.GameObject;
 
 public class GravityComponent implements ObjectComponent{
     private double gravity = 0.2;

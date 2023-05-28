@@ -1,6 +1,6 @@
 package src.Components;
 
-import src.GameObject;
+import src.Objects.GameObject;
 
 public class ForceRegulationComponent implements ObjectComponent{
     private double maxVelocity;

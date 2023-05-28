@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import src.GameManager;
-import src.GameObject;
+import src.Objects.GameObject;
 
 public class GrappleComponent implements ObjectComponent{
     private GameObject holder;

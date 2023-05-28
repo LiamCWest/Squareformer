@@ -1,8 +1,9 @@
-package src;
+package src.Objects;
 // import awt and arraylist
 import java.awt.*;
 import java.util.ArrayList;
 
+import src.GameManager;
 import src.Components.*;
 
 // game object class
@@ -17,16 +18,16 @@ public class GameObject{
     private boolean shapeQ;
     private Image image;
     private boolean hasGravity;
-    private boolean isMoveable;
     public boolean isPhysicsObject;
     private GameManager gameManager;
+    private boolean isCollisionObject;
 
     private Rectangle hitboxShape;
     private Rectangle hitbox;
     private ArrayList<ObjectComponent> components = new ArrayList<>();
 
     // constructors
-    public GameObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isMovable, boolean isPhysicsObject, GameManager gameManager) {
+    public GameObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isPhysicsObject, boolean isCollisionObject, GameManager gameManager) {
         // set the variables
         this.x = x;
         this.y = y;
@@ -39,6 +40,7 @@ public class GameObject{
         this.isPhysicsObject = isPhysicsObject;
         this.gameManager = gameManager;
         this.velocity = new double[]{0, 0};
+        this.isCollisionObject = isCollisionObject;
         // if the game object is a shape, calculate the bounding box and move the shapes
         if(shapeQ){
             this.hitboxShape = new Rectangle();
@@ -216,7 +218,7 @@ public class GameObject{
         return this.components;
     }
 
-    public boolean isMoveable(){
-        return this.isMoveable;
+    public boolean isCollisionObject(){
+        return this.isCollisionObject;
     }
 }

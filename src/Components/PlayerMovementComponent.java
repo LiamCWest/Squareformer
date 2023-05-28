@@ -1,7 +1,7 @@
 package src.Components;
 
 import src.GameManager;
-import src.GameObject;
+import src.Objects.GameObject;
 
 public class PlayerMovementComponent implements ObjectComponent{
     private GameObject player;
