@@ -36,13 +36,13 @@ public class CollisionComponent implements ObjectComponent{
 
         for (GameObject other : collisions) {
             Rectangle otherHitbox = other.getHitbox();
-            boolean rightXCheck = hitbox.getMaxX()+1 > otherHitbox.getMinX() && !(hitbox.getMinX()+1 >= otherHitbox.getMaxX());
+            boolean rightXCheck = hitbox.getMaxX()+2 > otherHitbox.getMinX() && !(hitbox.getMinX()+1 >= otherHitbox.getMaxX());
             boolean leftXCheck = hitbox.getMinX() < otherHitbox.getMaxX() && !(hitbox.getMaxX() <= otherHitbox.getMinX());
             boolean yCheck = isBetween(hitbox.getMinY(), hitbox.getMaxY(), otherHitbox.getMinY(), otherHitbox.getMaxY());
             
             boolean colRight = yCheck && rightXCheck && velocity[0] > 0;
             boolean colLeft = yCheck && leftXCheck && velocity[0] < 0;
-            boolean colBottom = hitbox.getMaxY()+1 > otherHitbox.getMinY() && !(hitbox.getMaxY() > otherHitbox.getMaxY()) && velocity[1] > 0;
+            boolean colBottom = hitbox.getMaxY()+1 > otherHitbox.getMinY() && !(hitbox.getMaxY() > otherHitbox.getMaxY()) && !(colLeft || colRight) && velocity[1] > 0;
             boolean colTop = hitbox.getMinY() < otherHitbox.getMaxY() && velocity[1] < 0;
             
             if (colLeft) {
@@ -97,7 +97,7 @@ public class CollisionComponent implements ObjectComponent{
     public boolean collidesWith(GameObject object, GameObject other) {
         // Get the hitboxes of both objects
         Rectangle hitbox0 = object.getHitbox();
-        Rectangle hitbox1 = new Rectangle(hitbox0.x + (int) object.getVelocity()[0], hitbox0.y + (int) object.getVelocity()[1], hitbox0.width, hitbox0.height + 1);
+        Rectangle hitbox1 = new Rectangle(hitbox0.x + (int) object.getVelocity()[0], hitbox0.y + (int) object.getVelocity()[1], hitbox0.width+1, hitbox0.height + 1);
         Rectangle hitbox2 = other.getHitbox();
 
         // Check if the hitboxes intersect

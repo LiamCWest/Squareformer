@@ -1,31 +1,34 @@
-package src;
+package src.Components;
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Grapple {
+import src.GameManager;
+import src.GameObject;
+
+public class GrappleComponent implements ObjectComponent{
     private GameObject holder;
     private GameManager gameManager;
     private Point mousePos;
-    private GameObject hitObject;
+    // private GameObject hitObject;
     private double[] hitPoint;
     private boolean isGrappling = false;
-    private int[] grapplePos = new int[2];
+    private double[] grapplePos = new double[2];
     private double grappleSpeed = 5;
     Line2D grappleLine = new Line2D.Double();
 
-    public Grapple(GameObject holder, GameManager gameManager){
+    public GrappleComponent(GameObject holder, GameManager gameManager){
         this.holder = holder;
         this.gameManager = gameManager;
     }
 
     public void startGrapple(){
         Point relativeMousePos = getMoisePoint();
-        double angle = getAngle(new Point(grapplePos[0], grapplePos[1]), relativeMousePos);
+        double angle = getAngle(new Point((int) grapplePos[0], (int) grapplePos[1]), relativeMousePos);
 
         Object[] hit = raycast(grapplePos, angle);
-        hitObject = (GameObject)hit[0];
+        // hitObject = (GameObject)hit[0];
         hitPoint = (double[])hit[1];
         if(hitPoint != null) isGrappling = true;
     }
@@ -34,11 +37,16 @@ public class Grapple {
         isGrappling = false;
     }
 
-    public void move(){
-        if(isGrappling){
-            double angle = getAngle(new Point(grapplePos[0], grapplePos[1]), new Point((int)hitPoint[0], (int)hitPoint[1]));
+    @Override
+    public void update(){
+        if(hitPoint != null){
+            double angle = getAngle(new Point((int) grapplePos[0], (int) grapplePos[1]), new Point((int)hitPoint[0], (int)hitPoint[1]));
             double xDir = Math.cos(angle);
             double yDir = Math.sin(angle);
+
+            if(isGrappling && getDistance(grapplePos, hitPoint) > 100){
+                holder.addForce(new double[]{xDir*grappleSpeed, yDir*grappleSpeed*0.075});
+            }
         }
     }
 
@@ -47,7 +55,12 @@ public class Grapple {
         grapplePos[1] = holder.getY() + (int)holder.getHitbox().getHeight() / 4;
         
         Point point2 = isGrappling ? new Point((int)hitPoint[0], (int)hitPoint[1]) : getMoisePoint();
-        double angle = getAngle(new Point(grapplePos[0], grapplePos[1]), point2);
+        double angle = getAngle(new Point((int) grapplePos[0], (int) grapplePos[1]), point2);
+
+        if(angle*(180/Math.PI) > 90 || angle*(180/Math.PI) < -90){
+            grapplePos[0] = holder.getX();
+        }
+        
         int length = 15;
         
         int xMod = (int)(Math.cos(angle)*length);
@@ -65,7 +78,7 @@ public class Grapple {
 
         g.setColor(Color.GRAY);
         g.setStroke(new BasicStroke(7));
-        g.drawLine(grapplePos[0], grapplePos[1], grapplePos[0]+xMod, grapplePos[1]+yMod);
+        g.drawLine((int) grapplePos[0], (int) grapplePos[1], (int) grapplePos[0]+xMod, (int) grapplePos[1]+yMod);
         g.setStroke(stroke);
     }
 
@@ -82,7 +95,7 @@ public class Grapple {
         return new Point((int)(mousePos.getX() - gamePos.getX()), (int)(mousePos.getY() - gamePos.getY()));
     }
 
-    public Object[] raycast (int[] point, double angle){
+    public Object[] raycast (double[] point, double angle){
         ArrayList<Map<GameObject, double[]>> hitObjects = new ArrayList<Map<GameObject, double[]>>();
 
         double xDir = Math.cos(angle);
@@ -116,7 +129,7 @@ public class Grapple {
                 double[] hitPoint = hitObject.values().iterator().next();
                 GameObject object = hitObject.keySet().iterator().next();
 
-                if (Math.sqrt(Math.pow(point[0]-hitPoint[0], 2)+Math.pow(point[1]-hitPoint[1], 2)) < Math.sqrt(Math.pow(point[0]-closestHit[0], 2)+Math.pow(point[1]-closestHit[1], 2))){
+                if (getDistance(point, hitPoint) < getDistance(point, closestHit)){
                     closestHit = hitPoint;
                     closestObject = object;
                 }
@@ -124,6 +137,10 @@ public class Grapple {
 
             return new Object[]{closestObject, closestHit};
         }else return new Object[]{null, null};
+    }
+
+    private double getDistance(double[] point1, double[] point2){
+        return Math.sqrt(Math.pow(point1[0]-point2[0], 2)+Math.pow(point1[1]-point2[1], 2));
     }
 
     private boolean hitObject(double x, double y, Rectangle hitbox){
