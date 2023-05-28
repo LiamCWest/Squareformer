@@ -8,15 +8,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-// Vector for the movement input
-import java.util.Vector;
 
 // game class
 public class Game extends JPanel{
     // private variables for the off-screen buffer, movement vector, game manager, and main
     private BufferedImage offScreenBuffer;
-    private Vector<Integer> movementVector;
     private GameManager gameManager;
+    private LevelManager levelManager;
     private Main main;
     private boolean running = false;
     private Thread gameThread;
@@ -33,18 +31,10 @@ public class Game extends JPanel{
         // Set the main variable and the game manager
         this.main = main;
         gameManager = new GameManager(this);
-        
-        // Initialize the movement vector
-        movementVector = new Vector<Integer>(2);
-        movementVector.add(0);  // Initialize index 0 with value 0
-        movementVector.add(0);  // Initialize index 1 with value 0
+        levelManager = new LevelManager(gameManager);
 
         // set the game thread
-        gameThread = new Thread(() -> {
-            while(true){
-                gameLoop();
-            }
-        });
+        gameThread = new Thread();
 
         // Create the off-screen buffer with the same size as the window
         offScreenBuffer = new BufferedImage(main.getSize().width, main.getSize().height, BufferedImage.TYPE_INT_ARGB);
@@ -66,12 +56,12 @@ public class Game extends JPanel{
             if(gameThread != null && gameThread.isAlive()){
                 gameThread.interrupt();
             }
-            gameThread = new Thread(() -> {
-                while(running){
-                    gameLoop();
-                }
-            });
         }
+        gameThread = new Thread(() -> {
+            while(running){
+                gameLoop();
+            }
+        });
         running = true;
         gameThread.start();
     }
@@ -199,4 +189,9 @@ public class Game extends JPanel{
     public JFrame getGameWindow(){
         return main;
     }
+
+    public LevelManager getLevelManager(){
+        return levelManager;
+    }
+
 }

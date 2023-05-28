@@ -1,8 +1,6 @@
 package src;
-// basic swing imports
-import java.awt.*;
+// imports
 import java.util.ArrayList;
-
 import javax.swing.JFrame;
 
 import src.Objects.*;
@@ -24,32 +22,8 @@ public class GameManager {
 
     // method to start the game
     public void start(){
-        // Create the player and add it to the game objects
-        player = new Player(100, 600, new Color[]{Color.RED}, new Polygon[]{
-            new Polygon(new int[]{0,50,50,0}, new int[]{0,0,50,50}, 4)
-        }, true, null, true, true, this);
-        gameObjects.add(player);
-
-        /// Create the ground and add it to the game objects
-        gameObjects.add(new GameObject(0, 718, new Color[]{Color.BLACK}, new Polygon[]{
-            new Polygon(new int[]{0, 1360, 1360, 0}, new int[]{0, 0, 50, 50}, 4)
-        }, true, null, false, false, true, this));
-
-        gameObjects.add(new GameObject(500, 643, new Color[]{Color.BLACK}, new Polygon[]{
-            new Polygon(new int[]{0, 75, 75, 0}, new int[]{0, 0, 75, 75}, 4)
-        }, true, null, false, false, true, this));
-
-        gameObjects.add(new GameObject(600, 550, new Color[]{Color.BLACK}, new Polygon[]{
-            new Polygon(new int[]{0,150,150,0}, new int[]{0,0,50,50}, 4)
-        }, true, null, false, false, true, this));
-
-        gameObjects.add(new GameObject(600, 200, new Color[]{Color.BLACK}, new Polygon[]{
-            new Polygon(new int[]{0,150,150,0}, new int[]{0,0,50,50}, 4)
-        }, true, null, false, false, true, this));
-
-        gameObjects.add(new Objective(1000, 600, new Color[]{Color.GREEN}, new Polygon[]{
-            new Polygon(new int[]{0,50,50,0}, new int[]{0,0,50,50}, 4)}, 
-            true, null, this));
+        game.getLevelManager().loadLevel(game.getLevelManager().getCurrentLevel());
+        player = (Player) gameObjects.get(0);
     }
 
     // update method, updates everything each frame

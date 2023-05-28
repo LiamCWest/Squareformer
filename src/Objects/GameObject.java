@@ -7,7 +7,7 @@ import src.GameManager;
 import src.Components.*;
 
 // game object class
-public class GameObject{
+public class GameObject implements Cloneable{
     // variables for movement, rendering, and collision
     private int x;
     private int y;
