@@ -15,6 +15,7 @@ public class LevelEditor extends JPanel{
     private Thread editorThread;
     private LevelEditorManager levelEditorManager;
     private LevelManager levelManager;
+    private LevelMenuBar levelMenuBar;
 
     private boolean running = false;
 
@@ -27,6 +28,7 @@ public class LevelEditor extends JPanel{
         this.main = main;
         levelEditorManager = new LevelEditorManager(this);
         levelManager = new LevelManager(null);
+        levelMenuBar = new LevelMenuBar(levelEditorManager);
         
         offScreenBuffer = new BufferedImage(main.getSize().width, main.getSize().height, BufferedImage.TYPE_INT_ARGB);
     }
@@ -67,6 +69,7 @@ public class LevelEditor extends JPanel{
         for(EditorObject editorObject : editorObjects){
             editorObject.draw(gb);
         }
+        levelMenuBar.draw(gb);
 
         Graphics2D panelGraphics = (Graphics2D) getGraphics();
         if (panelGraphics != null) {
@@ -99,5 +102,9 @@ public class LevelEditor extends JPanel{
 
     public JFrame getGameWindow(){
         return main;
+    }
+
+    public LevelMenuBar getLevelMenuBar(){
+        return levelMenuBar;
     }
 }

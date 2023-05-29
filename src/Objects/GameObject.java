@@ -233,4 +233,8 @@ public class GameObject{
     public Image getImage(){
         return this.image;
     }
+
+    public String ClassName(){
+        return this.getClass().getName();
+    }
 }

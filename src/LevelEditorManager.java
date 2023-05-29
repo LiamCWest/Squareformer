@@ -42,10 +42,15 @@ public class LevelEditorManager {
                 }
             }
         }
+        for(LevelMenuOption levelMenuOption : levelEditor.getLevelMenuBar().getLevelMenuOptions()){
+            if(levelMenuOption.isMouseOver()){
+                levelMenuOption.mouseAction();
+            }
+        }
     }
 
     private EditorObject convertToEditorObject(GameObject gameObject){
-        EditorObject editorObject = new EditorObject(gameObject.getX(), gameObject.getY(), gameObject.getColors(), gameObject.getShapes(), gameObject.getShapeQ(), gameObject.getImage(), gameObject.hasGravity(), gameObject.isPhysicsObject(), gameObject.isCollisionObject(), this);
+        EditorObject editorObject = new EditorObject(gameObject.getX(), gameObject.getY(), gameObject.getColors(), gameObject.getShapes(), gameObject.getShapeQ(), gameObject.getImage(), gameObject.hasGravity(), gameObject.isPhysicsObject(), gameObject.isCollisionObject(), this, gameObject.ClassName());
         return editorObject;
     }
 

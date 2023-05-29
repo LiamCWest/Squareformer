@@ -18,12 +18,13 @@ public class EditorObject {
     @SuppressWarnings("unused") private boolean isCollisionObject;
     private boolean isFocus;
     private LevelEditorManager levelEditorManager;
+    private String gameObjectClass;
 
     private Rectangle hitboxShape;
     private Rectangle hitbox;
 
     // constructors
-    public EditorObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isPhysicsObject, boolean isCollisionObject, LevelEditorManager levelEditorManager) {
+    public EditorObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isPhysicsObject, boolean isCollisionObject, LevelEditorManager levelEditorManager, String gameObjectClass) {
         // set the variables
         this.x = x;
         this.y = y;
@@ -37,6 +38,7 @@ public class EditorObject {
         this.isCollisionObject = isCollisionObject;
         this.isFocus = false;
         this.levelEditorManager = levelEditorManager;
+        this.gameObjectClass = gameObjectClass;
 
         // if the game object is a shape, calculate the bounding box and move the shapes
         if(shapeQ){
