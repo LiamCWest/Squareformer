@@ -11,6 +11,9 @@ public class Main extends JFrame{
     private Game gamePanel;
     private Menu menuPanel;
     private Menu pausePanel;
+    private Menu editorPausePanel;
+    private LevelEditor levelEditorPanel;
+    private JPanel currentPanel;
     
     // constructor
     public Main() {
@@ -27,21 +30,25 @@ public class Main extends JFrame{
         
         // Create the panels
         gamePanel = new Game(this);
+        levelEditorPanel = new LevelEditor(this);
         createMainMenu();
         createPauseMenu();
+        createEditorPauseMenu();
         
         // Add the panels to the card panel
         cardPanel.add(gamePanel, "game");
+        cardPanel.add(levelEditorPanel, "levelEditor");
         cardPanel.add(menuPanel, "menu");
         cardPanel.add(pausePanel, "pause");
+        cardPanel.add(editorPausePanel, "editorPause");
         
         // Add the card panel to the frame
         add(cardPanel, BorderLayout.CENTER);
 
         // Show the menu panel initially
         cardLayout.show(cardPanel, "menu");
-        
-        registerMovementInput();
+        currentPanel = menuPanel;
+
 
         // Show the frame
         SwingUtilities.invokeLater(() -> {
@@ -60,10 +67,15 @@ public class Main extends JFrame{
             return 1;
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true);
 
+        menuPanel.addButton("Level Editor", (a,b) -> {
+            showLevelEditor(true);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
+
         menuPanel.addButton("Exit", (a,b) -> {
             System.exit(0);
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true);
     }
 
     // method to create the pause panel
@@ -93,15 +105,44 @@ public class Main extends JFrame{
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,400}, true);
     }
 
+    public void createEditorPauseMenu(){
+        // Create the pause panel
+        editorPausePanel = new Menu(this, Color.BLUE, null);
+
+        // Add the buttons to the pause panel
+        editorPausePanel.addButton("Resume", (a,b) -> {
+            showLevelEditor(false);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true);
+
+        editorPausePanel.addButton("Restart", (a,b) -> {
+            showLevelEditor(true);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
+
+        editorPausePanel.addButton("Main Menu", (a,b) -> {
+            showMainMenu();
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true);
+
+        editorPausePanel.addButton("Exit", (a,b) -> {
+            System.exit(0);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,400}, true);
+    }
+
     // method to show the game panel
-    public void showGame(Boolean restart) {
+    public void showGame(boolean restart) {
         // Show the game panel
         cardLayout.show(cardPanel, "game");
+        currentPanel = gamePanel;
 
         // Set the focus to the game panel
         gamePanel.setFocusable(true);
         gamePanel.requestFocusInWindow();
         
+        registerMovementInput();
+
         // Start the game
         SwingUtilities.invokeLater(() -> {
             KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
@@ -114,6 +155,7 @@ public class Main extends JFrame{
     public void showPauseMenu(){
         // Show the pause panel
         cardLayout.show(cardPanel, "pause");
+        currentPanel = pausePanel;
 
         // Set the focus to the pause panel
         KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
@@ -124,19 +166,46 @@ public class Main extends JFrame{
     public void showMainMenu(){
         // Show the menu panel
         cardLayout.show(cardPanel, "menu");
+        currentPanel = menuPanel;
 
         // Set the focus to the menu panel
         KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
         focusManager.focusNextComponent();
     }
 
+    public void showEditorPauseMenu(){
+        // Show the pause panel
+        cardLayout.show(cardPanel, "editorPause");
+        currentPanel = editorPausePanel;
+
+        // Set the focus to the pause panel
+        KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        focusManager.focusNextComponent();
+    }
+
+    public void showLevelEditor(boolean restart){
+        // Show the level editor panel
+        cardLayout.show(cardPanel, "levelEditor");
+        currentPanel = levelEditorPanel;
+
+        // Set the focus to the level editor panel
+        levelEditorPanel.setFocusable(true);
+        levelEditorPanel.requestFocusInWindow();
+
+        registerMovementInput();
+
+        // Start the level editor
+        SwingUtilities.invokeLater(() -> {
+            KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            focusManager.focusNextComponent();
+            levelEditorPanel.start(restart);
+        });
+    }
+
     // call the movement input method in the game panel
     public void registerMovementInput() {
-        gamePanel.registerMovementInput();
-    
-        // Set the focus to the game panel
-        gamePanel.setFocusable(true);
-        gamePanel.requestFocusInWindow();
+        if(currentPanel == gamePanel) gamePanel.registerMovementInput();
+        else if(currentPanel == levelEditorPanel) levelEditorPanel.registerMovementInput();
     }
 
     // main method

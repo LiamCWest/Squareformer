@@ -36,7 +36,8 @@ public class GameManager {
 
     public void nextLevel(){
         gameObjects.clear();
-        start();
+        game.stop();
+        game.start(true);
     }
 
     public Player getPlayer(){

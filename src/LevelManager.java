@@ -9,10 +9,9 @@ import java.awt.Image;
 import java.awt.Polygon;
 import java.io.*;
 
-import src.Objects.*;
-
 public class LevelManager {
     private ArrayList<Level> levels;
+    @SuppressWarnings("unused")
     private GameManager gameManager;
     private int currentLevel = 0;
 
@@ -23,9 +22,9 @@ public class LevelManager {
         levels.add(level1);
     }
 
-    public ArrayList<GameObject> decodeLevel(File levelFile){
+    public ArrayList<ArrayList<Object>> decodeLevel(File levelFile){
         try{
-            ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+            ArrayList<ArrayList<Object>> objectValues = new ArrayList<ArrayList<Object>>();
             Scanner scanner = new Scanner(levelFile);
             while(scanner.hasNextLine()){
                 String[] baseInfo = scanner.nextLine().split(",");
@@ -122,23 +121,11 @@ public class LevelManager {
                 for(int i = 0; i < colors.size(); i++){
                     colorArray[i] = colors.get(i);
                 }
-
-                switch(type){
-                    case "gameObject":
-                        gameObjects.add(new GameObject(x, y, colorArray, polygons, shapeQ, image, hasGravity, isPhysicsObject, isCollisionObject, gameManager));
-                        break;
-                    case "player":
-                        gameObjects.add(new Player(x, y, colorArray, polygons, shapeQ, image, hasGravity, isPhysicsObject, gameManager));
-                        break;
-                    case "objective":
-                        gameObjects.add(new Objective(x, y, colorArray, polygons, shapeQ, image, gameManager));
-                        break;
-                }
-
+                objectValues.add(new ArrayList<Object>(Arrays.asList(type, x, y, colorArray, polygons, shapeQ, image, hasGravity, isPhysicsObject, isCollisionObject)));
             }
             
             scanner.close();
-            return gameObjects;
+            return objectValues;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,5 +138,9 @@ public class LevelManager {
 
     public void loadLevel(int levelIndex){
         levels.get(levelIndex).start();
+    }
+
+    public Level getLevel(int levelIndex){
+        return levels.get(levelIndex);
     }
 }

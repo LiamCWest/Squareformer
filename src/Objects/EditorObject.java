@@ -1,33 +1,29 @@
 package src.Objects;
-// import awt and arraylist
+
 import java.awt.*;
-import java.util.ArrayList;
 
-import src.GameManager;
-import src.Components.*;
+import src.LevelEditorManager;
 
-// game object class
-public class GameObject{
+public class EditorObject {
     // variables for movement, rendering, and collision
     private int x;
     private int y;
-    private double[] velocity;
     private Polygon[] shapes;
     private Polygon[] movedShapes;
     private Color[] colors;
     private boolean shapeQ;
     private Image image;
-    private boolean hasGravity;
+    @SuppressWarnings("unused") private boolean hasGravity;
     public boolean isPhysicsObject;
-    private GameManager gameManager;
-    private boolean isCollisionObject;
+    @SuppressWarnings("unused") private boolean isCollisionObject;
+    private boolean isFocus;
+    private LevelEditorManager levelEditorManager;
 
     private Rectangle hitboxShape;
     private Rectangle hitbox;
-    private ArrayList<ObjectComponent> components = new ArrayList<>();
 
     // constructors
-    public GameObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isPhysicsObject, boolean isCollisionObject, GameManager gameManager) {
+    public EditorObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isPhysicsObject, boolean isCollisionObject, LevelEditorManager levelEditorManager) {
         // set the variables
         this.x = x;
         this.y = y;
@@ -38,9 +34,10 @@ public class GameObject{
         this.image = image;
         this.hasGravity = hasGravity;
         this.isPhysicsObject = isPhysicsObject;
-        this.gameManager = gameManager;
-        this.velocity = new double[]{0, 0};
         this.isCollisionObject = isCollisionObject;
+        this.isFocus = false;
+        this.levelEditorManager = levelEditorManager;
+
         // if the game object is a shape, calculate the bounding box and move the shapes
         if(shapeQ){
             this.hitboxShape = new Rectangle();
@@ -50,31 +47,8 @@ public class GameObject{
         // else set the hitbox to the image size
         else this.hitbox = new Rectangle(x, y, image != null ? image.getWidth(null) : 0, image != null ? image.getHeight(null) : 0);
 
-        if(hasGravity){
-            addComponent(new CollisionComponent(this), -1); // Add the collision component
-            addComponent(new GravityComponent(this), -1); // Add the gravity component
-        }
-        if(isPhysicsObject){
-            addComponent(new ForceRegulationComponent(this, 1), -1); // Add the physics component
-        }
     }
 
-    // add a component to the components list
-    public void addComponent(ObjectComponent component, int index) {
-        if(index == -1) components.add(component);
-        else components.add(index, component);
-    }
-    
-    public <T extends ObjectComponent> T getComponent(Class<T> componentType) {
-        for (ObjectComponent component : components) {
-            if (componentType.isInstance(component)) {
-                return componentType.cast(component);
-            }
-        }
-        return null;
-    }
-
-    // method to draw the game object
     public void draw(Graphics2D g) {
         // if the game object is a shape, draw the shape, otherwise draw the image
         if (shapeQ) {
@@ -90,17 +64,11 @@ public class GameObject{
     }
 
     public void update(){
-        for (ObjectComponent component : components) {
-            component.update();
+        if(isFocus){
+            Point mousePos = getMoisePoint();
+            x = (int) (mousePos.getX() - (hitbox.getWidth() / 2));
+            y = (int) (mousePos.getY() - (hitbox.getHeight() / 2));
         }
-
-        move();
-    }
-    
-    public void move(){
-        x += velocity[0];
-        y += velocity[1];
-        hitbox = moveHitbox(x, y);
     }
 
     // method to move the shapes of the game object
@@ -108,11 +76,6 @@ public class GameObject{
         for (int i = 0; i < shapes.length; i++) {
             movedShapes[i] = changePos(this.x, this.y, shapes[i]);
         }
-    }
-
-    // getter method for the hitbox
-    public Rectangle getHitbox(){
-        return hitbox;
     }
 
     // method to move a polygon a certain distance
@@ -177,60 +140,35 @@ public class GameObject{
         return y;
     }
 
-    public boolean isShapeQ(){
-        return shapeQ;
+    // setter method for the x position
+    public void setX(int x){
+        this.x = x;
     }
 
-    public Polygon[] getShapes(){
-        return shapes;
+    // setter method for the y position
+    public void setY(int y){
+        this.y = y;
     }
 
-    public boolean hasGravity(){
-        return hasGravity;
+    public boolean isMouseOver(){
+        Point mousePos = getMoisePoint();
+        boolean checkX = mousePos.getX() > x && mousePos.getX() < x + hitbox.width;
+        boolean checkY = mousePos.getY() > y && mousePos.getY() < y + hitbox.height;
+        
+        return checkX && checkY;
     }
 
-    public void setHasGravity(boolean hasGravity){
-        this.hasGravity = hasGravity;
+    private Point getMoisePoint(){
+        Point mousePos = MouseInfo.getPointerInfo().getLocation();
+        Point gamePos = levelEditorManager.getGameWindow().getLocationOnScreen();
+        return new Point((int)(mousePos.getX() - gamePos.getX()), (int)(mousePos.getY() - gamePos.getY()));
     }
 
-    public GameManager getGameManager(){
-        return this.gameManager;
+    public void setFocus(boolean focus){
+        this.isFocus = focus;
     }
-
-    public double[] getVelocity(){
-        return this.velocity;
-    }
-
-    public boolean isPhysicsObject(){
-        return this.isPhysicsObject;
-    }
-
-    public void setVelocity(double[] velocity){
-        this.velocity = velocity;
-    }
-
-    public void addForce(double[] force){
-        this.velocity[0] += force[0];
-        this.velocity[1] += force[1];
-    }
-
-    public ArrayList<ObjectComponent> getComponents(){
-        return this.components;
-    }
-
-    public boolean isCollisionObject(){
-        return this.isCollisionObject;
-    }
-
-    public Color[] getColors(){
-        return this.colors;
-    }
-
-    public boolean getShapeQ(){
-        return this.shapeQ;
-    }
-
-    public Image getImage(){
-        return this.image;
+    
+    public boolean getFocus(){
+        return isFocus;
     }
 }

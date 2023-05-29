@@ -33,9 +33,6 @@ public class Game extends JPanel{
         gameManager = new GameManager(this);
         levelManager = new LevelManager(gameManager);
 
-        // set the game thread
-        gameThread = new Thread();
-
         // Create the off-screen buffer with the same size as the window
         offScreenBuffer = new BufferedImage(main.getSize().width, main.getSize().height, BufferedImage.TYPE_INT_ARGB);
     }
@@ -58,9 +55,7 @@ public class Game extends JPanel{
             }
         }
         gameThread = new Thread(() -> {
-            while(running){
-                gameLoop();
-            }
+            gameLoop();
         });
         running = true;
         gameThread.start();
