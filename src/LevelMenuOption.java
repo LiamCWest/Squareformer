@@ -2,8 +2,6 @@ package src;
 
 import java.awt.*;
 
-import src.Objects.GameObject;
-
 public class LevelMenuOption {
     private int x;
     private int y;
@@ -43,6 +41,6 @@ public class LevelMenuOption {
     }
 
     public void mouseAction(){
-        System.out.println("Mouse Action");
+        levelEditorManager.createEditorObect(gameObjectClass);
     }
 }

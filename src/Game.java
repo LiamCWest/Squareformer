@@ -44,11 +44,11 @@ public class Game extends JPanel{
     }
 
     // method to start the game
-    public void start(Boolean restart) {
+    public void start(Boolean restart, int level) {
         // Start the game loop and restart if needed
         if(restart){
             gameManager.setGameObjects(new ArrayList<GameObject>());
-            gameManager.start();
+            gameManager.start(level);
 
             if(gameThread != null && gameThread.isAlive()){
                 gameThread.interrupt();
@@ -189,4 +189,7 @@ public class Game extends JPanel{
         return levelManager;
     }
 
+    public GameManager getGameManager(){
+        return gameManager;
+    }
 }

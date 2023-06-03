@@ -13,9 +13,9 @@ public class EditorObject {
     private Color[] colors;
     private boolean shapeQ;
     private Image image;
-    @SuppressWarnings("unused") private boolean hasGravity;
+    private boolean hasGravity;
     public boolean isPhysicsObject;
-    @SuppressWarnings("unused") private boolean isCollisionObject;
+    private boolean isCollisionObject;
     private boolean isFocus;
     private LevelEditorManager levelEditorManager;
     private String gameObjectClass;
@@ -172,5 +172,37 @@ public class EditorObject {
     
     public boolean getFocus(){
         return isFocus;
+    }
+
+    public String getGameObjectClass(){
+        return gameObjectClass;
+    }
+
+    public Color[] getColors(){
+        return colors;
+    }
+
+    public Polygon[] getShapes(){
+        return shapes;
+    }
+
+    public boolean getShapeQ(){
+        return shapeQ;
+    }
+
+    public Image getImage(){
+        return image;
+    }
+
+    public boolean hasGravity(){
+        return hasGravity;
+    }
+
+    public boolean isPhysicsObject(){
+        return isPhysicsObject;
+    }
+
+    public boolean isCollisionObject(){
+        return isCollisionObject;
     }
 }

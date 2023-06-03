@@ -21,7 +21,8 @@ public class GameManager {
     }
 
     // method to start the game
-    public void start(){
+    public void start(int level) {
+        game.getLevelManager().setCurrentLevel(level);
         game.getLevelManager().loadLevel(game.getLevelManager().getCurrentLevel());
         player = (Player) gameObjects.get(0);
     }
@@ -37,7 +38,7 @@ public class GameManager {
     public void nextLevel(){
         gameObjects.clear();
         game.stop();
-        game.start(true);
+        game.start(true, game.getLevelManager().getCurrentLevel() + 1);
     }
 
     public Player getPlayer(){

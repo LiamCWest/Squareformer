@@ -2,6 +2,7 @@ package src;
 // basic imports for swing
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 // main class
 public class Main extends JFrame{
@@ -12,6 +13,7 @@ public class Main extends JFrame{
     private Menu menuPanel;
     private Menu pausePanel;
     private Menu editorPausePanel;
+    private Menu levelMenu;
     private LevelEditor levelEditorPanel;
     private JPanel currentPanel;
     
@@ -30,10 +32,11 @@ public class Main extends JFrame{
         
         // Create the panels
         gamePanel = new Game(this);
-        levelEditorPanel = new LevelEditor(this);
+        levelEditorPanel = new LevelEditor(this, gamePanel.getGameManager());
         createMainMenu();
         createPauseMenu();
         createEditorPauseMenu();
+        createLevelMenu();
         
         // Add the panels to the card panel
         cardPanel.add(gamePanel, "game");
@@ -41,6 +44,7 @@ public class Main extends JFrame{
         cardPanel.add(menuPanel, "menu");
         cardPanel.add(pausePanel, "pause");
         cardPanel.add(editorPausePanel, "editorPause");
+        cardPanel.add(levelMenu, "levelMenu");
         
         // Add the card panel to the frame
         add(cardPanel, BorderLayout.CENTER);
@@ -63,12 +67,12 @@ public class Main extends JFrame{
 
         // Add the buttons to the menu panel
         menuPanel.addButton("Play", (a,b) -> {
-            showGame(true);
+            showGame(true, 0);
             return 1;
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true);
 
-        menuPanel.addButton("Level Editor", (a,b) -> {
-            showLevelEditor(true);
+        menuPanel.addButton("Level Menu", (a,b) -> {
+            showLevelMenu();
             return 1;
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
 
@@ -85,12 +89,12 @@ public class Main extends JFrame{
 
         // Add the buttons to the pause panel
         pausePanel.addButton("Resume", (a,b) -> {
-            showGame(false);
+            showGame(false, 0);
             return 1;
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true);
 
         pausePanel.addButton("Restart", (a,b) -> {
-            showGame(true);
+            showGame(true, gamePanel.getLevelManager().getCurrentLevel());
             return 1;
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
 
@@ -111,28 +115,66 @@ public class Main extends JFrame{
 
         // Add the buttons to the pause panel
         editorPausePanel.addButton("Resume", (a,b) -> {
-            showLevelEditor(false);
+            showLevelEditor(false, false, false, "");
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-172,200}, false);
 
         editorPausePanel.addButton("Restart", (a,b) -> {
-            showLevelEditor(true);
+            showLevelEditor(true, levelEditorPanel.getLevelEditorManager().getLevel().isNewLevel(), false, "");
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)+22,200}, false);
+
+        editorPausePanel.addButton("Level Menu", (a,b) -> {
+            showLevelMenu();
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-172,300}, false);
 
         editorPausePanel.addButton("Main Menu", (a,b) -> {
             showMainMenu();
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)+22,300}, false);
+
+        editorPausePanel.addButton("Save", (a,b) -> {
+            levelEditorPanel.getLevelEditorManager().save();
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-172,400}, false);
 
         editorPausePanel.addButton("Exit", (a,b) -> {
             System.exit(0);
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,400}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)+22,400}, false);
+    }
+
+    public void createLevelMenu(){
+        levelMenu = new Menu(this, Color.MAGENTA, null);
+
+        ArrayList<Level> levels = levelEditorPanel.getLevelManager().getLevels();
+        for(int i = 0; i < levels.size(); i++){
+            Level level = levels.get(i);
+            levelMenu.addButton(level.getLevelName(), (a,b) -> {
+                showGame(true, levels.indexOf(level));
+                return 1;
+            }, new int[]{100,60}, new int[]{50+(i*125),200}, false);
+
+            levelMenu.addButton("Edit", (a,b) -> {
+                showLevelEditor(true, false, false, levels.get(levels.indexOf(level)).getLevelName());
+                return 1;
+            }, new int[]{50,60}, new int[]{175+(i*175),200}, false);
+        }
+
+        levelMenu.addButton("New Level", (a,b) -> {
+            showLevelEditor(true, true, true, "");
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,575}, true);
+
+        levelMenu.addButton("Back", (a,b) -> {
+            showMainMenu();
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,650}, true);
     }
 
     // method to show the game panel
-    public void showGame(boolean restart) {
+    public void showGame(boolean restart, int levelIndex) {
         // Show the game panel
         cardLayout.show(cardPanel, "game");
         currentPanel = gamePanel;
@@ -147,7 +189,7 @@ public class Main extends JFrame{
         SwingUtilities.invokeLater(() -> {
             KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             focusManager.focusNextComponent();
-            gamePanel.start(restart);
+            gamePanel.start(restart, levelIndex);
         });
     }
 
@@ -183,7 +225,11 @@ public class Main extends JFrame{
         focusManager.focusNextComponent();
     }
 
-    public void showLevelEditor(boolean restart){
+    public void showLevelEditor(boolean restart, boolean newLevel, boolean askForName, String levelName){
+        if(askForName) levelName = JOptionPane.showInputDialog(this, "Enter a name for the new level", "New Level", JOptionPane.PLAIN_MESSAGE);
+        
+        final String levelNameFinal = levelName;
+
         // Show the level editor panel
         cardLayout.show(cardPanel, "levelEditor");
         currentPanel = levelEditorPanel;
@@ -193,13 +239,23 @@ public class Main extends JFrame{
         levelEditorPanel.requestFocusInWindow();
 
         registerMovementInput();
-
+        
         // Start the level editor
         SwingUtilities.invokeLater(() -> {
             KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
             focusManager.focusNextComponent();
-            levelEditorPanel.start(restart);
+            levelEditorPanel.start(restart, newLevel, levelNameFinal);
         });
+    }
+
+    public void showLevelMenu(){
+        // Show the level menu panel
+        cardLayout.show(cardPanel, "levelMenu");
+        currentPanel = levelMenu;
+
+        // Set the focus to the level menu panel
+        KeyboardFocusManager focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
+        focusManager.focusNextComponent();
     }
 
     // call the movement input method in the game panel
@@ -227,19 +283,3 @@ public class Main extends JFrame{
         SwingUtilities.invokeLater(Main::new);
     }
 }
-
-
-/*
-TODO
-moving objects - physics system, onCollision(){if(moveable) add force} - 2
-movement abilities -3
-Class for levels - 4
-storage of some sort - 5
-level selector - 6
-objective, win condition, and just generally what the game is
-
-maybe:
-level editor
-enemies 
-fighting system
-*/

@@ -8,31 +8,39 @@ import src.Objects.*;
 public class Level {
     private ArrayList<ArrayList<Object>> objectValues;
     private ArrayList<GameObject> gameObjects;
-    @SuppressWarnings("unused")
     private LevelManager levelManager;
     private GameManager gameManager;
-    @SuppressWarnings("unused")
     private String levelName;
     private File levelFile;
+    private boolean newLevel;
+    private boolean isMainLevel;
     
-    public Level(String levelName, LevelManager levelManager, GameManager gameManager) {
+    public Level(String levelName, LevelManager levelManager, GameManager gameManager, boolean newLevel, boolean isMainLevel) {
         this.levelName = levelName;
         this.levelManager = levelManager;
         this.gameManager = gameManager;
         this.levelFile = new File("Levels/"+levelName+".csv");
-        this.objectValues = levelManager.decodeLevel(levelFile);
+        this.newLevel = newLevel;
+        this.isMainLevel = isMainLevel;
+        if(!(newLevel)) this.objectValues = levelManager.decodeLevel(levelFile);
     }
 
     public void start(){
-        gameObjects = getGameObjects();
-        gameManager.setGameObjects(gameObjects);
+        if(!(newLevel)){
+            gameObjects = pullGameObjects();
+            gameManager.setGameObjects(gameObjects);
+        }
     }
 
-    public ArrayList<GameObject> getGameObjects(){
+    public void save(){
+        levelManager.encodeLevel(this);
+    }
+
+    public ArrayList<GameObject> pullGameObjects(){
         ArrayList<GameObject> objects = new ArrayList<GameObject>();
         for(ArrayList<Object> object : objectValues){
-            switch(object.get(0).toString()){
-                case "gameObject":
+            switch(object.get(0).toString().toLowerCase()){
+                case "gameobject":
                     objects.add(new GameObject((int) object.get(1), (int) object.get(2), (Color[]) object.get(3), (Polygon[]) object.get(4), (boolean) object.get(5), (Image) object.get(6), (boolean) object.get(7), (boolean) object.get(8), (boolean) object.get(9), gameManager));
                     break;
                 case "player":
@@ -44,5 +52,29 @@ public class Level {
             }
         }
         return objects;
+    }
+
+    public String getLevelName(){
+        return levelName;
+    }
+
+    public boolean isNewLevel(){
+        return newLevel;
+    }
+
+    public GameManager getGameManager(){
+        return gameManager;
+    }
+
+    public void setGameObjects(ArrayList<GameObject> gameObjects){
+        this.gameObjects = gameObjects;
+    }
+
+    public ArrayList<GameObject> getGameObjects(){
+        return gameObjects;
+    }
+
+    public boolean isMainLevel(){
+        return isMainLevel;
     }
 }

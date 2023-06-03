@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class LevelMenuBar {
     private ArrayList<LevelMenuOption> levelMenuOptions;
-    private LevelEditorManager levelEditorManager;
+    @SuppressWarnings("unused") private LevelEditorManager levelEditorManager;
 
     public LevelMenuBar(LevelEditorManager levelEditorManager){
         this.levelEditorManager = levelEditorManager;

@@ -4,6 +4,8 @@ import java.util.*;
 
 import javax.imageio.ImageIO;
 
+import src.Objects.*;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Polygon;
@@ -14,12 +16,59 @@ public class LevelManager {
     @SuppressWarnings("unused")
     private GameManager gameManager;
     private int currentLevel = 0;
+    private File levelFolder;
 
     public LevelManager(GameManager gameManager) {
         levels = new ArrayList<Level>();
         this.gameManager = gameManager;
-        Level level1 = new Level("Level1", this, gameManager);
-        levels.add(level1);
+        levelFolder = new File("Levels");
+        File[] levelFiles = levelFolder.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.endsWith("csv");
+            }
+        });
+        for(File levelFile : levelFiles){
+            levels.add(new Level(levelFile.getName().split("\\.")[0], this, gameManager, false, true));
+        }
+    }
+
+    public void encodeLevel(Level level){
+        ArrayList<GameObject> objects = level.getGameObjects();
+        try {
+            File levelFile;
+            if(level.isMainLevel()) levelFile = new File("Levels/" + level.getLevelName() + ".csv");
+            else levelFile = new File("Levels/UserCreated/" + level.getLevelName() + ".csv");
+            levelFile.createNewFile();
+            FileWriter writer = new FileWriter(levelFile);
+            for(GameObject object : objects){
+                String type = object.getClass().getName().toLowerCase().split("\\.")[2];
+                int x = object.getX();
+                int y = object.getY();
+                Color[] colors = object.getColors();
+                Polygon[] polygons = object.getShapes();
+                boolean shapeQ = object.isShapeQ();
+                Image image = object.getImage();
+                boolean hasGravity = object.hasGravity();
+                boolean isPhysicsObject = object.isPhysicsObject();
+                boolean isCollisionObject = object.isCollisionObject();
+                writer.write(type + "," + x + "," + y + "," + polygons.length + "," + shapeQ + "," + image + "," + hasGravity + "," + isPhysicsObject + "," + isCollisionObject + "\n");
+                for(Color color : colors){
+                    writer.write("true" + "," + color.getRed() + "," + color.getGreen() + "," + color.getBlue() + ",");
+                }
+                writer.write("\n");
+                for(Polygon polygon : polygons){
+                    writer.write(polygon.xpoints.length + ",");
+                    for(int i = 0; i < polygon.xpoints.length; i++)writer.write(polygon.xpoints[i] + ",");
+                    for(int i = 0; i < polygon.ypoints.length; i++)writer.write(polygon.ypoints[i] + ",");
+                }
+                writer.write("\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 
     public ArrayList<ArrayList<Object>> decodeLevel(File levelFile){
@@ -142,5 +191,22 @@ public class LevelManager {
 
     public Level getLevel(int levelIndex){
         return levels.get(levelIndex);
+    }
+
+    public void setCurrentLevel(int levelIndex){
+        currentLevel = levelIndex;
+    }
+    
+    public ArrayList<Level> getLevels(){
+        return levels;
+    }
+
+    public Level getLevelByName(String name){
+        for(Level level : levels){
+            if(level.getLevelName().equals(name)){
+                return level;
+            }
+        }
+        return null;
     }
 }

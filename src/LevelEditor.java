@@ -16,16 +16,18 @@ public class LevelEditor extends JPanel{
     private LevelEditorManager levelEditorManager;
     private LevelManager levelManager;
     private LevelMenuBar levelMenuBar;
+    private GameManager gameManager;
 
     private boolean running = false;
 
-    public LevelEditor(Main main){
+    public LevelEditor(Main main, GameManager gameManager){
         // Set the background color and layout
         setBackground(Color.WHITE);
         setLayout(new BorderLayout());
         setFocusable(true);
 
         this.main = main;
+        this.gameManager = gameManager;
         levelEditorManager = new LevelEditorManager(this);
         levelManager = new LevelManager(null);
         levelMenuBar = new LevelMenuBar(levelEditorManager);
@@ -33,9 +35,13 @@ public class LevelEditor extends JPanel{
         offScreenBuffer = new BufferedImage(main.getSize().width, main.getSize().height, BufferedImage.TYPE_INT_ARGB);
     }
 
-    public void start(boolean restart){
+    public void start(boolean restart, boolean newLevel, String levelName){
         if(restart){
-            levelEditorManager.start(levelManager.getLevel(levelManager.getCurrentLevel()));
+            if(newLevel){
+                levelEditorManager.start(new Level(levelName, levelManager, gameManager, true, false));
+            }else{
+                levelEditorManager.start(levelManager.getLevelByName(levelName));
+            }
             
             if(editorThread != null && editorThread.isAlive()){
                 editorThread.interrupt();
@@ -106,5 +112,13 @@ public class LevelEditor extends JPanel{
 
     public LevelMenuBar getLevelMenuBar(){
         return levelMenuBar;
+    }
+
+    public LevelManager getLevelManager(){
+        return levelManager;
+    }
+
+    public LevelEditorManager getLevelEditorManager(){
+        return levelEditorManager;
     }
 }
