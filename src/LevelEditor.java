@@ -72,7 +72,11 @@ public class LevelEditor extends JPanel{
         gb.fillRect(0, 0, main.getSize().width, main.getSize().height);
         
         ArrayList<EditorObject> editorObjects = levelEditorManager.getEditorObjects();
+        ArrayList<EditorObject> tempEditorObjects = new ArrayList<EditorObject>();
         for(EditorObject editorObject : editorObjects){
+            tempEditorObjects.add(editorObject);
+        }
+        for(EditorObject editorObject : tempEditorObjects){
             editorObject.draw(gb);
         }
         levelMenuBar.draw(gb);

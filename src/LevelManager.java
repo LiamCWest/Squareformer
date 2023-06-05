@@ -36,12 +36,19 @@ public class LevelManager {
         ArrayList<GameObject> objects = level.getGameObjects();
         try {
             File levelFile;
-            if(level.isMainLevel()) levelFile = new File("Levels/" + level.getLevelName() + ".csv");
-            else levelFile = new File("Levels/UserCreated/" + level.getLevelName() + ".csv");
-            levelFile.createNewFile();
+            File levelSaveFolder;
+            if(level.isMainLevel()) levelSaveFolder = new File("Levels");
+            else levelSaveFolder = new File("Levels/UserCreated");
+            levelFile = new File(levelSaveFolder + "/" + level.getLevelName() + ".csv");
+            if(levelSaveFolder.exists()) levelFile.createNewFile();
+            else levelSaveFolder.mkdir();
             FileWriter writer = new FileWriter(levelFile);
             for(GameObject object : objects){
-                String type = object.getClass().getName().toLowerCase().split("\\.")[2];
+                String type = object.getClass().getName().toLowerCase();
+                if(type.contains(".")){
+                    long count = type.chars().filter(ch -> ch == '.').count();
+                    type = type.split("\\.")[(int) count];
+                }
                 int x = object.getX();
                 int y = object.getY();
                 Color[] colors = object.getColors();

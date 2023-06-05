@@ -35,6 +35,12 @@ public class GameManager {
         }
     }
 
+    public void endGame(){
+        gameObjects.clear();
+        game.stop();
+        game.start(true, 0);
+    }
+
     public void nextLevel(){
         gameObjects.clear();
         game.stop();

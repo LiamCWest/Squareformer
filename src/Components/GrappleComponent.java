@@ -39,6 +39,7 @@ public class GrappleComponent implements ObjectComponent{
 
     @Override
     public void update(){
+        this.gameManager = holder.getGameManager();
         if(hitPoint != null){
             double angle = getAngle(new Point((int) grapplePos[0], (int) grapplePos[1]), new Point((int)hitPoint[0], (int)hitPoint[1]));
             double xDir = Math.cos(angle);

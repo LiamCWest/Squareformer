@@ -4,6 +4,9 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import src.Objects.*;
+import src.Objects.ActiveObjects.DamageObject;
+import src.Objects.ActiveObjects.EnergyObject;
+import src.Objects.ActiveObjects.HealObject;
 
 public class Level {
     private ArrayList<ArrayList<Object>> objectValues;
@@ -48,6 +51,15 @@ public class Level {
                     break;
                 case "objective":
                     objects.add(new Objective((int) object.get(1), (int) object.get(2), (Color[]) object.get(3), (Polygon[]) object.get(4), (boolean) object.get(5), (Image) object.get(6), gameManager));
+                    break;
+                case "damageobject":
+                    objects.add(new DamageObject((int) object.get(1), (int) object.get(2), (Color[]) object.get(3), (Polygon[]) object.get(4), (boolean) object.get(5), (Image) object.get(6), (boolean) object.get(7), (boolean) object.get(8), gameManager));
+                    break;
+                case "healobject":
+                    objects.add(new HealObject((int) object.get(1), (int) object.get(2), (Color[]) object.get(3), (Polygon[]) object.get(4), (boolean) object.get(5), (Image) object.get(6), (boolean) object.get(7), (boolean) object.get(8), gameManager));
+                    break;
+                case "energyobject":
+                    objects.add(new EnergyObject((int) object.get(1), (int) object.get(2), (Color[]) object.get(3), (Polygon[]) object.get(4), (boolean) object.get(5), (Image) object.get(6), (boolean) object.get(7), (boolean) object.get(8), gameManager));
                     break;
             }
         }

@@ -74,6 +74,10 @@ public class GameObject{
         return null;
     }
 
+    public void removeComponent(ObjectComponent component) {
+        components.remove(component);
+    }
+
     // method to draw the game object
     public void draw(Graphics2D g) {
         // if the game object is a shape, draw the shape, otherwise draw the image
@@ -90,7 +94,12 @@ public class GameObject{
     }
 
     public void update(){
+        ArrayList<ObjectComponent> tempComponents = new ArrayList<ObjectComponent>();
         for (ObjectComponent component : components) {
+            tempComponents.add(component);
+        }
+
+        for (ObjectComponent component : tempComponents) {
             component.update();
         }
 

@@ -8,6 +8,9 @@ import java.awt.*;
 import java.io.File;
 
 import src.Objects.*;
+import src.Objects.ActiveObjects.DamageObject;
+import src.Objects.ActiveObjects.EnergyObject;
+import src.Objects.ActiveObjects.HealObject;
 
 public class LevelEditorManager {
     private LevelEditor levelEditor;
@@ -24,7 +27,7 @@ public class LevelEditorManager {
         this.level = level;
         editorObjects = new ArrayList<EditorObject>();
         if(level.isNewLevel()){
-            editorObjects.add(new EditorObject(100, 600, new Color[]{Color.RED}, new Polygon[]{new Polygon(new int[]{0, 50, 50, 0}, new int[]{0, 0, 50, 50},4)}, true, null, true, true, true, this, "player"));
+            editorObjects.add(new EditorObject(100, 600, new Color[]{Color.MAGENTA}, new Polygon[]{new Polygon(new int[]{0, 50, 50, 0}, new int[]{0, 0, 50, 50},4)}, true, null, true, true, true, this, "player"));
             editorObjects.add(new EditorObject(0, 718, new Color[]{Color.BLACK}, new Polygon[]{new Polygon(new int[]{0, 1360, 1360, 0}, new int[]{0, 0, 50, 50}, 4)}, true, null, false, false, true, this, "gameObject"));
         } else{
             ArrayList<GameObject> gameObjects = level.pullGameObjects();
@@ -75,13 +78,25 @@ public class LevelEditorManager {
     }
 
     private GameObject convertToGameObject(EditorObject editorObject){
-        switch(editorObject.getGameObjectClass().split("\\.")[2].toLowerCase()){
+        String objectClass = editorObject.getGameObjectClass().toLowerCase();
+        if(objectClass.contains(".")){
+            long count = objectClass.chars().filter(ch -> ch == '.').count();
+            objectClass = objectClass.split("\\.")[((int) count)].toLowerCase();
+        }
+
+        switch(objectClass){
             case "gameobject":
                 return new GameObject(editorObject.getX(), editorObject.getY(), editorObject.getColors(), editorObject.getShapes(), editorObject.getShapeQ(), editorObject.getImage(), editorObject.hasGravity(), editorObject.isPhysicsObject(), editorObject.isCollisionObject(), level.getGameManager());
             case "player":
                 return new Player(editorObject.getX(), editorObject.getY(), editorObject.getColors(), editorObject.getShapes(), editorObject.getShapeQ(), editorObject.getImage(), editorObject.hasGravity(), editorObject.isPhysicsObject(), level.getGameManager());
             case "objective":
                 return new Objective(editorObject.getX(), editorObject.getY(), editorObject.getColors(), editorObject.getShapes(), editorObject.getShapeQ(), editorObject.getImage(), level.getGameManager());
+            case "damageobject":
+                return new DamageObject(editorObject.getX(), editorObject.getY(), editorObject.getColors(), editorObject.getShapes(), editorObject.getShapeQ(), editorObject.getImage(), editorObject.hasGravity(), editorObject.isPhysicsObject(), level.getGameManager());
+            case "healobject":
+                return new HealObject(editorObject.getX(), editorObject.getY(), editorObject.getColors(), editorObject.getShapes(), editorObject.getShapeQ(), editorObject.getImage(), editorObject.hasGravity(), editorObject.isPhysicsObject(), level.getGameManager());
+            case "energyobject":
+                return new EnergyObject(editorObject.getX(), editorObject.getY(), editorObject.getColors(), editorObject.getShapes(), editorObject.getShapeQ(), editorObject.getImage(), editorObject.hasGravity(), editorObject.isPhysicsObject(), level.getGameManager());
         }
         return null;
     }
@@ -140,10 +155,12 @@ public class LevelEditorManager {
             Color color = getColor(fields[4].getText()); //fix this
             boolean shapeQ = Boolean.parseBoolean(fields[5].getText());
             Image image = null;
-            try{
-                image = ImageIO.read(new File(fields[6].getText()));
-            }catch(Exception e){
-                System.out.println("Image not found");
+            if(!(shapeQ)){
+                try{
+                    image = ImageIO.read(new File(fields[6].getText()));
+                }catch(Exception e){
+                    System.out.println("Image not found");
+                }
             }
             boolean hasGravity = Boolean.parseBoolean(fields[7].getText());
             boolean isPhysicsObject = Boolean.parseBoolean(fields[8].getText());

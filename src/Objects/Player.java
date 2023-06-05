@@ -9,6 +9,8 @@ import src.Components.*;
 public class Player extends GameObject {
     // private variables for jumping and moving
     private GrappleComponent grapple;
+    private double energy = 10.0;
+    private double health = 20.0;
     
     // constructor
     public Player(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isPhysicsObject, GameManager gameManager) {
@@ -22,6 +24,7 @@ public class Player extends GameObject {
 
     @Override
     public void draw(Graphics2D g) {
+        System.out.println("Energy: " + energy + " Health: " + health);
         // draw the grapple
         grapple.draw(g);
         // call the normal draw method from GameObject
@@ -31,5 +34,29 @@ public class Player extends GameObject {
     public void grapple(){
         if(grapple.isGrappling()) grapple.endGrapple();
         else grapple.startGrapple();
+    }
+
+    public void changeEnergy(double energyDelta){
+        energy += energyDelta;
+    }
+
+    public void changeHealth(double healthDelta){
+        health += healthDelta;
+    }
+
+    public double getEnergy(){
+        return energy;
+    }
+
+    public double getHealth(){
+        return health;
+    }
+
+    public void setEnergy(double energy){
+        this.energy = energy;
+    }
+
+    public void setHealth(double health){
+        this.health = health;
     }
 }

@@ -69,17 +69,17 @@ public class Main extends JFrame{
         menuPanel.addButton("Play", (a,b) -> {
             showGame(true, 0);
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true, false);
 
         menuPanel.addButton("Level Menu", (a,b) -> {
             showLevelMenu();
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true, false);
 
         menuPanel.addButton("Exit", (a,b) -> {
             System.exit(0);
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true, false);
     }
 
     // method to create the pause panel
@@ -91,22 +91,22 @@ public class Main extends JFrame{
         pausePanel.addButton("Resume", (a,b) -> {
             showGame(false, 0);
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true, false);
 
         pausePanel.addButton("Restart", (a,b) -> {
             showGame(true, gamePanel.getLevelManager().getCurrentLevel());
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true, false);
 
         pausePanel.addButton("Main Menu", (a,b) -> {
             showMainMenu();
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true, false);
 
         pausePanel.addButton("Exit", (a,b) -> {
             System.exit(0);
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,400}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,400}, true, false);
     }
 
     public void createEditorPauseMenu(){
@@ -117,32 +117,32 @@ public class Main extends JFrame{
         editorPausePanel.addButton("Resume", (a,b) -> {
             showLevelEditor(false, false, false, "");
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-172,200}, false);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-172,200}, false, false);
 
         editorPausePanel.addButton("Restart", (a,b) -> {
             showLevelEditor(true, levelEditorPanel.getLevelEditorManager().getLevel().isNewLevel(), false, "");
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)+22,200}, false);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)+22,200}, false, false);
 
         editorPausePanel.addButton("Level Menu", (a,b) -> {
             showLevelMenu();
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-172,300}, false);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-172,300}, false, false);
 
         editorPausePanel.addButton("Main Menu", (a,b) -> {
             showMainMenu();
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)+22,300}, false);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)+22,300}, false, false);
 
         editorPausePanel.addButton("Save", (a,b) -> {
             levelEditorPanel.getLevelEditorManager().save();
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-172,400}, false);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-172,400}, false, false);
 
         editorPausePanel.addButton("Exit", (a,b) -> {
             System.exit(0);
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)+22,400}, false);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)+22,400}, false, false);
     }
 
     public void createLevelMenu(){
@@ -154,23 +154,23 @@ public class Main extends JFrame{
             levelMenu.addButton(level.getLevelName(), (a,b) -> {
                 showGame(true, levels.indexOf(level));
                 return 1;
-            }, new int[]{100,60}, new int[]{50+(i*125),200}, false);
+            }, new int[]{100,60}, new int[]{50+(i*175),200}, false, false);
 
             levelMenu.addButton("Edit", (a,b) -> {
                 showLevelEditor(true, false, false, levels.get(levels.indexOf(level)).getLevelName());
                 return 1;
-            }, new int[]{50,60}, new int[]{175+(i*175),200}, false);
+            }, new int[]{50,60}, new int[]{150+(i*175),200}, false, true);
         }
 
         levelMenu.addButton("New Level", (a,b) -> {
             showLevelEditor(true, true, true, "");
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,575}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,575}, true, false);
 
         levelMenu.addButton("Back", (a,b) -> {
             showMainMenu();
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,650}, true);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,650}, true, false);
     }
 
     // method to show the game panel

@@ -18,7 +18,7 @@ public class Menu extends JPanel{
     }
 
     // method to add a button to the menu panel
-    public <T> void addButton(String name, BinaryOperator<Integer> method, int[] buttonSize, int[] buttonPosition, Boolean isCentered){
+    public <T> void addButton(String name, BinaryOperator<Integer> method, int[] buttonSize, int[] buttonPosition, Boolean isCentered, Boolean sideways){
         JButton button = new JButton(name); // Create the button
 
         // Add the action listener
