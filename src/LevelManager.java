@@ -27,6 +27,7 @@ public class LevelManager {
                 return name.endsWith("csv");
             }
         });
+        Arrays.sort(levelFiles);
         for(File levelFile : levelFiles){
             levels.add(new Level(levelFile.getName().split("\\.")[0], this, gameManager, false, true));
         }

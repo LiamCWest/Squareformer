@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import src.GameManager;
-import src.Objects.GameObject;
+import src.Objects.*;
 
 public class GrappleComponent implements ObjectComponent{
-    private GameObject holder;
+    private Player holder;
     private GameManager gameManager;
     private Point mousePos;
     // private GameObject hitObject;
@@ -18,7 +18,7 @@ public class GrappleComponent implements ObjectComponent{
     private double grappleSpeed = 5;
     Line2D grappleLine = new Line2D.Double();
 
-    public GrappleComponent(GameObject holder, GameManager gameManager){
+    public GrappleComponent(Player holder, GameManager gameManager){
         this.holder = holder;
         this.gameManager = gameManager;
     }
@@ -47,6 +47,7 @@ public class GrappleComponent implements ObjectComponent{
 
             if(isGrappling && getDistance(grapplePos, hitPoint) > 100){
                 holder.addForce(new double[]{xDir*grappleSpeed, yDir*grappleSpeed*0.075});
+                holder.changeEnergy(-0.005);
             }
         }
     }
@@ -103,7 +104,7 @@ public class GrappleComponent implements ObjectComponent{
         double yDir = Math.sin(angle);
 
         for(GameObject object : gameManager.getGameObjects()){
-            if(object != holder){
+            if(object != holder && object.isCollisionObject()){
                 double x = point[0];
                 double y = point[1];
                 boolean hit = false;

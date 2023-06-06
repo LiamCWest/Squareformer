@@ -28,7 +28,7 @@ public class HealthChangeComponent implements ObjectComponent{
 
             health = activeObject.getGameManager().getPlayer().getHealth();
             
-            if(activeObject.getChange() > 0){
+            if(activeObject.getChange() > 0 && health < 20){
                 activeObject.getGameManager().getPlayer().changeHealth(activeObject.getChange());
                 activeObject.setVisable(false);
                 activeObject.removeComponent(this);
