@@ -9,6 +9,8 @@ import src.Objects.*;
 public class GameManager {
     // private variables for the game objects, player, game, and jumping
     private ArrayList<GameObject> gameObjects;
+    private EnergyDisplay energyDisplay;
+    private HealthDisplay healthDisplay;
     private Player player;
     private Game game;
     private int moveDirection = 0;
@@ -25,6 +27,8 @@ public class GameManager {
         game.getLevelManager().setCurrentLevel(level);
         game.getLevelManager().loadLevel(game.getLevelManager().getCurrentLevel());
         player = (Player) gameObjects.get(0);
+        energyDisplay = new EnergyDisplay(30, 30, player);
+        healthDisplay = new HealthDisplay(game.getGameWindow().getSize().width-104, 30, player);
     }
 
     // update method, updates everything each frame
@@ -33,6 +37,8 @@ public class GameManager {
         for (GameObject gameObject : gameObjects) {
             gameObject.update();
         }
+        energyDisplay.update();
+        healthDisplay.update();
     }
 
     public void endGame(){
@@ -83,5 +89,13 @@ public class GameManager {
 
     public boolean getJump(){
         return jump;
+    }
+
+    public EnergyDisplay getEnergyDisplay(){
+        return energyDisplay;
+    }
+    
+    public HealthDisplay getHealthDisplay(){
+        return healthDisplay;
     }
 }

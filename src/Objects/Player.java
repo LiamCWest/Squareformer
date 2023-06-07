@@ -24,7 +24,6 @@ public class Player extends GameObject {
 
     @Override
     public void draw(Graphics2D g) {
-        System.out.println("Energy: " + energy + " Health: " + health);
         // draw the grapple
         grapple.draw(g);
         // call the normal draw method from GameObject

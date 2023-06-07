@@ -102,6 +102,12 @@ public class Game extends JPanel{
             gameObject.draw(g);
         }
 
+        // Draw the energy display
+        gameManager.getEnergyDisplay().draw(g);
+
+        // Draw the health display
+        gameManager.getHealthDisplay().draw(g);
+
         // Draw the off-screen buffer to the game panel
         Graphics2D panelGraphics = (Graphics2D) getGraphics();
         if (panelGraphics != null) {

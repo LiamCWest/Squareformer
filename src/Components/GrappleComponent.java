@@ -50,6 +50,11 @@ public class GrappleComponent implements ObjectComponent{
                 holder.changeEnergy(-0.005);
             }
         }
+
+        if(holder.getEnergy() <= 0){
+            endGrapple();
+            holder.setEnergy(0);
+        }
     }
 
     public void draw(Graphics2D g){
