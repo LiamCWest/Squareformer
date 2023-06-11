@@ -17,10 +17,13 @@ public class LevelManager {
     private GameManager gameManager;
     private int currentLevel = 0;
     private File levelFolder;
+    @SuppressWarnings("unused")
+    private Main main;
 
-    public LevelManager(GameManager gameManager) {
+    public LevelManager(GameManager gameManager, Main main, boolean editor) {
         levels = new ArrayList<Level>();
         this.gameManager = gameManager;
+        this.main = main;
         levelFolder = new File("Levels");
         File[] levelFiles = levelFolder.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -30,6 +33,22 @@ public class LevelManager {
         Arrays.sort(levelFiles);
         for(File levelFile : levelFiles){
             levels.add(new Level(levelFile.getName().split("\\.")[0], this, gameManager, false, true));
+        }
+
+        if(!(editor)){
+            ArrayList<ArrayList<Level>> levelPages = new ArrayList<ArrayList<Level>>();
+            ArrayList<Level> tempPage = new ArrayList<Level>();
+            for(Level level : levels){
+                if(levels.indexOf(level)%18 == 0 && levels.indexOf(level) != 0){
+                    System.out.println(levels.indexOf(level));
+                    levelPages.add(tempPage);
+                    tempPage = new ArrayList<Level>();
+                }
+                tempPage.add(level);
+            }
+            levelPages.add(tempPage);
+
+            main.createLevelMenu(levelPages);
         }
     }
 

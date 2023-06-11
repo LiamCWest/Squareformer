@@ -11,6 +11,7 @@ public class Player extends GameObject {
     private GrappleComponent grapple;
     private double energy = 10.0;
     private double health = 20.0;
+    private int energyDelay = 0;
     
     // constructor
     public Player(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isPhysicsObject, GameManager gameManager) {
@@ -28,6 +29,16 @@ public class Player extends GameObject {
         grapple.draw(g);
         // call the normal draw method from GameObject
         super.draw(g);
+    }
+
+    @Override
+    public void update() {
+        if(energy < 10 && !(grapple.isGrappling()) && energyDelay == 0) energy += 0.0005;
+        if (energy > 10) energy = 10;
+        if (grapple.isGrappling()) energyDelay = 500;
+        else if (energyDelay > 0) energyDelay--;
+        // call the normal update method from GameObject
+        super.update();
     }
 
     public void grapple(){

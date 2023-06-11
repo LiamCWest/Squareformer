@@ -2,6 +2,7 @@ package src;
 // basic imports for swing
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 // main class
@@ -14,8 +15,10 @@ public class Main extends JFrame{
     private Menu pausePanel;
     private Menu editorPausePanel;
     private Menu levelMenu;
+    private ArrayList<Menu> levelMenus;
     private LevelEditor levelEditorPanel;
     private JPanel currentPanel;
+    private int levelMenuPage = 0;
     
     // constructor
     public Main() {
@@ -31,12 +34,12 @@ public class Main extends JFrame{
         cardPanel.setLayout(cardLayout);
         
         // Create the panels
+        this.levelMenus = new ArrayList<Menu>();
         gamePanel = new Game(this);
         levelEditorPanel = new LevelEditor(this, gamePanel.getGameManager());
         createMainMenu();
         createPauseMenu();
         createEditorPauseMenu();
-        createLevelMenu();
         
         // Add the panels to the card panel
         cardPanel.add(gamePanel, "game");
@@ -145,32 +148,84 @@ public class Main extends JFrame{
         }, new int[]{150,60}, new int[]{(getSize().width/2)+22,400}, false, false);
     }
 
-    public void createLevelMenu(){
-        levelMenu = new Menu(this, Color.MAGENTA, null);
+    public void createLevelMenu(ArrayList<ArrayList<Level>> levels){
+        for(ArrayList<Level> levelPage : levels){
+            levelMenus.add(levelMenu(levelPage));
+        }
+        levelMenu = levelMenus.get(0);
+    }
 
-        ArrayList<Level> levels = levelEditorPanel.getLevelManager().getLevels();
+    public Menu levelMenu(ArrayList<Level> levels){
+        Menu newLevelMenu = new Menu(this, Color.MAGENTA, null);
         for(int i = 0; i < levels.size(); i++){
             Level level = levels.get(i);
-            levelMenu.addButton(level.getLevelName(), (a,b) -> {
+            newLevelMenu.addButton(level.getLevelName(), (a,b) -> {
                 showGame(true, levels.indexOf(level));
                 return 1;
-            }, new int[]{100,60}, new int[]{50+(i*175),200}, false, false);
+            }, new int[]{100,60}, new int[]{150+((i%6)*175),200+(int)((Math.floor(i/6))*100)}, false, false);
 
-            levelMenu.addButton("Edit", (a,b) -> {
+            newLevelMenu.addButton("Edit", (a,b) -> {
                 showLevelEditor(true, false, false, levels.get(levels.indexOf(level)).getLevelName());
                 return 1;
-            }, new int[]{50,60}, new int[]{150+(i*175),200}, false, true);
+            }, new int[]{50,60}, new int[]{150+100+((i%6)*175),200+(int)((Math.floor(i/6))*100)}, false, true);
         }
 
-        levelMenu.addButton("New Level", (a,b) -> {
+        newLevelMenu.addButton("New Level", (a,b) -> {
             showLevelEditor(true, true, true, "");
             return 1;
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,575}, true, false);
 
-        levelMenu.addButton("Back", (a,b) -> {
+        newLevelMenu.addButton("Back", (a,b) -> {
             showMainMenu();
             return 1;
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,650}, true, false);
+
+        int rightX = 625;
+        int rightY = 150;
+        JButton rightButton = new TriangleButton(new int[]{rightX,rightX+50,rightX}, new int[]{rightY,rightY+50,rightY+100});
+        rightButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Show the menu panel
+                SwingUtilities.invokeLater(() -> {
+                    // add the method given to the action listener
+                    if(levelMenuPage < levelMenus.size()-1){
+                        levelMenuPage++;
+                        cardPanel.remove(levelMenu);
+                        levelMenu = levelMenus.get(levelMenuPage);
+                        cardPanel.add(levelMenu, "levelMenu");
+                        showLevelMenu();
+                    }
+                });
+            }
+        });
+        rightButton.setBounds(rightX,rightY,rightX+50,rightY+100);
+        newLevelMenu.add(rightButton);
+        
+        int leftX = 25;
+        int leftY = 150;
+        JButton leftButton = new TriangleButton(new int[]{leftX+50,leftX,leftX+50}, new int[]{leftY,leftY+50,leftY+100});
+        leftButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Show the menu panel
+                SwingUtilities.invokeLater(() -> {
+                    // add the method given to the action listener
+                    if(levelMenuPage > 0){
+                        levelMenuPage--;
+                        cardPanel.remove(levelMenu);
+                        levelMenu = levelMenus.get(levelMenuPage);
+                        cardPanel.add(levelMenu, "levelMenu");
+                        showLevelMenu();
+                    }
+                });
+            }
+        });
+        leftButton.setBounds(leftX,leftY,leftX+50,leftY+100);
+        newLevelMenu.add(leftButton);
+
+
+        return newLevelMenu;
     }
 
     // method to show the game panel
@@ -281,5 +336,31 @@ public class Main extends JFrame{
 
         // Create the main frame
         SwingUtilities.invokeLater(Main::new);
+    }
+}
+class TriangleButton extends JButton {
+
+    private Polygon triangle;
+
+    public TriangleButton(int[] xPoints, int[] yPoints) {
+        super();
+
+        triangle = new Polygon(xPoints, yPoints, 3);
+
+        setOpaque(false);
+        setContentAreaFilled(false);
+        setBorderPainted(false);
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.setColor(Color.BLACK);
+        g.fillPolygon(triangle);
+    }
+
+    @Override
+    public boolean contains(int x, int y) {
+        return triangle.contains(x, y);
     }
 }

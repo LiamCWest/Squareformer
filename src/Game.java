@@ -31,7 +31,7 @@ public class Game extends JPanel{
         // Set the main variable and the game manager
         this.main = main;
         gameManager = new GameManager(this);
-        levelManager = new LevelManager(gameManager);
+        levelManager = new LevelManager(gameManager, main, false);
 
         // Create the off-screen buffer with the same size as the window
         offScreenBuffer = new BufferedImage(main.getSize().width, main.getSize().height, BufferedImage.TYPE_INT_ARGB);

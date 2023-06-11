@@ -29,7 +29,7 @@ public class LevelEditor extends JPanel{
         this.main = main;
         this.gameManager = gameManager;
         levelEditorManager = new LevelEditorManager(this);
-        levelManager = new LevelManager(null);
+        levelManager = new LevelManager(gameManager, main, true);
         levelMenuBar = new LevelMenuBar(levelEditorManager);
         
         offScreenBuffer = new BufferedImage(main.getSize().width, main.getSize().height, BufferedImage.TYPE_INT_ARGB);
