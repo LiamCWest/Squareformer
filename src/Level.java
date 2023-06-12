@@ -61,6 +61,12 @@ public class Level {
                 case "energyobject":
                     objects.add(new EnergyObject((int) object.get(1), (int) object.get(2), (Color[]) object.get(3), (Polygon[]) object.get(4), (boolean) object.get(5), (Image) object.get(6), (boolean) object.get(7), (boolean) object.get(8), gameManager));
                     break;
+                case "text":
+                    objects.add(new TextObject((int) object.get(1), (int) object.get(2), (String) object.get(3), (int) object.get(4)));
+                    break;
+                default:
+                    System.out.println("Error: Object type not found " + object.get(0).toString().toLowerCase());
+                    break;
             }
         }
         return objects;
