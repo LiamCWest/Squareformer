@@ -13,15 +13,18 @@ import java.io.*;
 
 public class LevelManager {
     private ArrayList<Level> levels;
+    private ArrayList<Level> userLevels;
     @SuppressWarnings("unused")
     private GameManager gameManager;
     private int currentLevel = 0;
     private File levelFolder;
+    private File userLevelFolder;
     @SuppressWarnings("unused")
     private Main main;
 
     public LevelManager(GameManager gameManager, Main main, boolean editor) {
         levels = new ArrayList<Level>();
+        userLevels = new ArrayList<Level>();
         this.gameManager = gameManager;
         this.main = main;
         levelFolder = new File("Levels");
@@ -33,6 +36,17 @@ public class LevelManager {
         Arrays.sort(levelFiles);
         for(File levelFile : levelFiles){
             levels.add(new Level(levelFile.getName().split("\\.")[0], this, gameManager, false, true));
+        }
+
+        userLevelFolder = new File("Levels/UserCreated");
+        File[] userLevelFiles = userLevelFolder.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.endsWith("csv");
+            }
+        });
+        Arrays.sort(userLevelFiles);
+        for(File levelFile : userLevelFiles){
+            userLevels.add(new Level(levelFile.getName().split("\\.")[0], this, gameManager, true, false));
         }
 
         if(!(editor)){
@@ -47,8 +61,21 @@ public class LevelManager {
                 tempPage.add(level);
             }
             levelPages.add(tempPage);
+            ArrayList<ArrayList<Level>> customLevelPages = new ArrayList<ArrayList<Level>>();
+            if(userLevels != null){
+                tempPage = new ArrayList<Level>();
+                for(Level level : userLevels){
+                    if(userLevels.indexOf(level)%18 == 0 && userLevels.indexOf(level) != 0){
+                        System.out.println(userLevels.indexOf(level));
+                        customLevelPages.add(tempPage);
+                        tempPage = new ArrayList<Level>();
+                    }
+                    tempPage.add(level);
+                }
+                customLevelPages.add(tempPage);
+            }
 
-            main.createLevelMenu(levelPages);
+            main.createLevelMenu(levelPages, customLevelPages);
         }
     }
 

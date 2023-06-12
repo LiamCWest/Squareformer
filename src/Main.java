@@ -19,6 +19,7 @@ public class Main extends JFrame{
     private LevelEditor levelEditorPanel;
     private JPanel currentPanel;
     private int levelMenuPage = 0;
+    private int mainLevelPages = 0;
     
     // constructor
     public Main() {
@@ -66,55 +67,76 @@ public class Main extends JFrame{
     // method to create the menu panel
     public void createMainMenu(){
         // Create the menu panel
-        menuPanel = new Menu(this, Color.GREEN, null);
+        menuPanel = new Menu(this, Color.decode("#88D9E6"), null, new Color[]{Color.decode("#8B8BAE"), Color.decode("#FFFFFF")});
+
+        JLabel menuLabel = new JLabel("Main Menu");
+        menuLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        Dimension size = menuLabel.getPreferredSize();
+        menuLabel.setBounds(getSize().width/2 - size.width/2, 75, size.width, size.height);
+        menuLabel.setForeground(Color.decode("#001D4A"));
+        menuPanel.add(menuLabel);
 
         // Add the buttons to the menu panel
         menuPanel.addButton("Play", (a,b) -> {
             showGame(true, 0);
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true, false);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true, false);
 
         menuPanel.addButton("Level Menu", (a,b) -> {
             showLevelMenu();
             return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true, false);
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true, false);
 
         menuPanel.addButton("Exit", (a,b) -> {
-            System.exit(0);
-            return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true, false);
-    }
-
-    // method to create the pause panel
-    public void createPauseMenu(){
-        // Create the pause panel
-        pausePanel = new Menu(this, Color.BLUE, null);
-
-        // Add the buttons to the pause panel
-        pausePanel.addButton("Resume", (a,b) -> {
-            showGame(false, 0);
-            return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,100}, true, false);
-
-        pausePanel.addButton("Restart", (a,b) -> {
-            showGame(true, gamePanel.getLevelManager().getCurrentLevel());
-            return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true, false);
-
-        pausePanel.addButton("Main Menu", (a,b) -> {
-            showMainMenu();
-            return 1;
-        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true, false);
-
-        pausePanel.addButton("Exit", (a,b) -> {
             System.exit(0);
             return 1;
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,400}, true, false);
     }
 
+    // method to create the pause panel
+    public void createPauseMenu(){
+        // Create the pause panel
+        pausePanel = new Menu(this, Color.decode("#C5FFFD"), null, new Color[]{Color.decode("#8B8BAE"), Color.decode("#FFFFFF")});
+
+        JLabel menuLabel = new JLabel("Pause");
+        menuLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        Dimension size = menuLabel.getPreferredSize();
+        menuLabel.setBounds(getSize().width/2 - size.width/2, 75, size.width, size.height);
+        menuLabel.setForeground(Color.decode("#001D4A"));
+        pausePanel.add(menuLabel);
+
+        // Add the buttons to the pause panel
+        pausePanel.addButton("Resume", (a,b) -> {
+            showGame(false, 0);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,200}, true, false);
+
+        pausePanel.addButton("Restart", (a,b) -> {
+            showGame(true, gamePanel.getLevelManager().getCurrentLevel());
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,300}, true, false);
+
+        pausePanel.addButton("Main Menu", (a,b) -> {
+            showMainMenu();
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,400}, true, false);
+
+        pausePanel.addButton("Exit", (a,b) -> {
+            System.exit(0);
+            return 1;
+        }, new int[]{150,60}, new int[]{(getSize().width/2)-50,500}, true, false);
+    }
+
     public void createEditorPauseMenu(){
         // Create the pause panel
-        editorPausePanel = new Menu(this, Color.BLUE, null);
+        editorPausePanel = new Menu(this, Color.decode("#C5FFFD"), null, new Color[]{Color.decode("#8B8BAE"), Color.decode("#FFFFFF")});
+
+        JLabel menuLabel = new JLabel("Pause");
+        menuLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        Dimension size = menuLabel.getPreferredSize();
+        menuLabel.setBounds(getSize().width/2 - size.width/2, 75, size.width, size.height);
+        menuLabel.setForeground(Color.decode("#001D4A"));
+        editorPausePanel.add(menuLabel);
 
         // Add the buttons to the pause panel
         editorPausePanel.addButton("Resume", (a,b) -> {
@@ -148,15 +170,29 @@ public class Main extends JFrame{
         }, new int[]{150,60}, new int[]{(getSize().width/2)+22,400}, false, false);
     }
 
-    public void createLevelMenu(ArrayList<ArrayList<Level>> levels){
+    public void createLevelMenu(ArrayList<ArrayList<Level>> levels, ArrayList<ArrayList<Level>> customLevels){
         for(ArrayList<Level> levelPage : levels){
-            levelMenus.add(levelMenu(levelPage));
+            levelMenus.add(levelMenu(levelPage, true));
+        }
+        mainLevelPages = levelMenus.size();
+        for(ArrayList<Level> levelPage : customLevels){
+            levelMenus.add(levelMenu(levelPage, false));
         }
         levelMenu = levelMenus.get(0);
     }
 
-    public Menu levelMenu(ArrayList<Level> levels){
-        Menu newLevelMenu = new Menu(this, Color.MAGENTA, null);
+    public Menu levelMenu(ArrayList<Level> levels, boolean main){
+        Menu newLevelMenu = new Menu(this, Color.decode("#88D9E6"), null, new Color[]{Color.decode("#8B8BAE"), Color.decode("#FFFFFF")});
+
+        JLabel levelLabel = new JLabel();
+        if(main) levelLabel.setText("Level Menu - Page " + (levelMenus.size()+1));
+        else levelLabel.setText("Custom Levels Menu - Page " + (levelMenus.size()+1-mainLevelPages));
+        levelLabel.setFont(new Font("Arial", Font.BOLD, 30));
+        Dimension size = levelLabel.getPreferredSize();
+        levelLabel.setBounds(getSize().width/2 - size.width/2, 75, size.width, size.height);
+        levelLabel.setForeground(Color.decode("#001D4A"));
+        newLevelMenu.add(levelLabel);
+
         for(int i = 0; i < levels.size(); i++){
             Level level = levels.get(i);
             newLevelMenu.addButton(level.getLevelName(), (a,b) -> {
@@ -182,7 +218,7 @@ public class Main extends JFrame{
 
         int rightX = 625;
         int rightY = 150;
-        JButton rightButton = new TriangleButton(new int[]{rightX,rightX+50,rightX}, new int[]{rightY,rightY+50,rightY+100});
+        JButton rightButton = new TriangleButton(new int[]{rightX,rightX+50,rightX}, new int[]{rightY,rightY+50,rightY+100}, Color.decode("#8B8BAE"));
         rightButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -204,7 +240,7 @@ public class Main extends JFrame{
         
         int leftX = 25;
         int leftY = 150;
-        JButton leftButton = new TriangleButton(new int[]{leftX+50,leftX,leftX+50}, new int[]{leftY,leftY+50,leftY+100});
+        JButton leftButton = new TriangleButton(new int[]{leftX+50,leftX,leftX+50}, new int[]{leftY,leftY+50,leftY+100}, Color.decode("#8B8BAE"));
         leftButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -341,11 +377,13 @@ public class Main extends JFrame{
 class TriangleButton extends JButton {
 
     private Polygon triangle;
+    private Color color;
 
-    public TriangleButton(int[] xPoints, int[] yPoints) {
+    public TriangleButton(int[] xPoints, int[] yPoints, Color color) {
         super();
 
         triangle = new Polygon(xPoints, yPoints, 3);
+        this.color = color;
 
         setOpaque(false);
         setContentAreaFilled(false);
@@ -355,7 +393,7 @@ class TriangleButton extends JButton {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.BLACK);
+        g.setColor(color);
         g.fillPolygon(triangle);
     }
 
