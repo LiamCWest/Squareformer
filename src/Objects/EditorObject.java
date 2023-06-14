@@ -1,5 +1,6 @@
 package src.Objects;
 
+// Import necessary libraries
 import java.awt.*;
 
 import src.LevelEditorManager;
@@ -23,7 +24,7 @@ public class EditorObject {
     private Rectangle hitboxShape;
     private Rectangle hitbox;
 
-    // constructors
+    // constructor
     public EditorObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isPhysicsObject, boolean isCollisionObject, LevelEditorManager levelEditorManager, String gameObjectClass) {
         // set the variables
         this.x = x;
@@ -51,6 +52,7 @@ public class EditorObject {
 
     }
 
+    // Draw method
     public void draw(Graphics2D g) {
         // if the game object is a shape, draw the shape, otherwise draw the image
         if (shapeQ) {
@@ -65,7 +67,9 @@ public class EditorObject {
         }
     }
 
+    // update method
     public void update(){
+        // if the game object is the focus, move it
         if(isFocus){
             Point mousePos = getMoisePoint();
             x = (int) (mousePos.getX() - (hitbox.getWidth() / 2));
@@ -152,6 +156,7 @@ public class EditorObject {
         this.y = y;
     }
 
+    // getter method for the hitbox
     public boolean isMouseOver(){
         Point mousePos = getMoisePoint();
         boolean checkX = mousePos.getX() > x && mousePos.getX() < x + hitbox.width;
@@ -160,12 +165,14 @@ public class EditorObject {
         return checkX && checkY;
     }
 
+    // get the mouse position relative to the game window
     private Point getMoisePoint(){
         Point mousePos = MouseInfo.getPointerInfo().getLocation();
         Point gamePos = levelEditorManager.getGameWindow().getLocationOnScreen();
         return new Point((int)(mousePos.getX() - gamePos.getX()), (int)(mousePos.getY() - gamePos.getY()));
     }
 
+    // getters and setters for the game object's variables
     public void setFocus(boolean focus){
         this.isFocus = focus;
     }

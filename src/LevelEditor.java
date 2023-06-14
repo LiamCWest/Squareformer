@@ -1,5 +1,6 @@
 package src;
 
+// Imports
 import javax.swing.*;
 
 import src.Objects.*;
@@ -9,7 +10,9 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+// LevelEditor class
 public class LevelEditor extends JPanel{
+    // Variables
     private BufferedImage offScreenBuffer;
     private Main main;
     private Thread editorThread;
@@ -20,6 +23,7 @@ public class LevelEditor extends JPanel{
 
     private boolean running = false;
 
+    // Constructor
     public LevelEditor(Main main, GameManager gameManager){
         // Set the background color and layout
         setBackground(Color.WHITE);
@@ -35,17 +39,22 @@ public class LevelEditor extends JPanel{
         offScreenBuffer = new BufferedImage(main.getSize().width, main.getSize().height, BufferedImage.TYPE_INT_ARGB);
     }
 
+    // start method
     public void start(boolean restart, boolean newLevel, String levelName){
+        // If the level is being restarted
         if(restart){
+            // If the editor thread is running, interrupt it
+            if(editorThread != null && editorThread.isAlive()){
+                editorThread.interrupt();
+            }
+
+            // If the level is new start a new level, otherwise start the level with the given name
             if(newLevel){
                 levelEditorManager.start(new Level(levelName, levelManager, gameManager, true, false));
             }else{
                 levelEditorManager.start(levelManager.getLevelByName(levelName));
             }
             
-            if(editorThread != null && editorThread.isAlive()){
-                editorThread.interrupt();
-            }
         }
         editorThread = new Thread(() -> {
             editorLoop();
@@ -54,10 +63,12 @@ public class LevelEditor extends JPanel{
         editorThread.start();
     }
 
+    // stop method
     public void stop(){
         running = false;
     }
 
+    // editorLoop method
     public void editorLoop(){
         while(running){
             levelEditorManager.update();
@@ -65,13 +76,16 @@ public class LevelEditor extends JPanel{
         }
     }
 
+    // render method
     public void render(){
         Graphics2D gb = offScreenBuffer.createGraphics();
 
+        // Clear the screen
         gb.setColor(Color.WHITE);
         gb.fillRect(0, 0, main.getSize().width, main.getSize().height);
         
         ArrayList<EditorObject> editorObjects = levelEditorManager.getEditorObjects();
+        // tempEditorObjects is used to avoid a ConcurrentModificationException
         ArrayList<EditorObject> tempEditorObjects = new ArrayList<EditorObject>();
         for(EditorObject editorObject : editorObjects){
             tempEditorObjects.add(editorObject);
@@ -81,6 +95,7 @@ public class LevelEditor extends JPanel{
         }
         levelMenuBar.draw(gb);
 
+        // Draw the off screen buffer to the screen
         Graphics2D panelGraphics = (Graphics2D) getGraphics();
         if (panelGraphics != null) {
             panelGraphics.drawImage(offScreenBuffer, 0, 0, null);
@@ -88,10 +103,12 @@ public class LevelEditor extends JPanel{
         }
     }
 
+    // registerMovementInput method
     public void registerMovementInput(){
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = getActionMap();
 
+        // escape key shows the pause menu
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "escapeAction");
         actionMap.put("escapeAction", new AbstractAction() {
             @Override
@@ -101,6 +118,7 @@ public class LevelEditor extends JPanel{
             }
         });
 
+        // mouse click calls the mouse action method in LevelEditorManager
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent event) {
@@ -110,6 +128,7 @@ public class LevelEditor extends JPanel{
         });
     }
 
+    // Getters and Setters
     public JFrame getGameWindow(){
         return main;
     }

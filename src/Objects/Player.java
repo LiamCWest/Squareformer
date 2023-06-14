@@ -41,19 +41,23 @@ public class Player extends GameObject {
         super.update();
     }
 
+    // method to grapple
     public void grapple(){
         if(grapple.isGrappling()) grapple.endGrapple();
         else grapple.startGrapple();
     }
 
+    // method to change the energy
     public void changeEnergy(double energyDelta){
         energy += energyDelta;
     }
 
+    // method to change the health
     public void changeHealth(double healthDelta){
         health += healthDelta;
     }
 
+    // getters and setters
     public double getEnergy(){
         return energy;
     }

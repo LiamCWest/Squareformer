@@ -1,12 +1,16 @@
 package src;
 
+// Imports
 import java.awt.*;
 import java.util.ArrayList;
 
+// LevelMenuBar class
 public class LevelMenuBar {
+    // Variables
     private ArrayList<LevelMenuOption> levelMenuOptions;
     @SuppressWarnings("unused") private LevelEditorManager levelEditorManager;
 
+    // Constructor
     public LevelMenuBar(LevelEditorManager levelEditorManager){
         this.levelEditorManager = levelEditorManager;
         levelMenuOptions = new ArrayList<LevelMenuOption>();
@@ -18,16 +22,14 @@ public class LevelMenuBar {
         levelMenuOptions.add(new LevelMenuOption(25, 400, 50, 50, Color.YELLOW, "EnergyObject", levelEditorManager));
     }
 
-    public void update(){
-
-    }
-
+    // draw method
     public void draw(Graphics2D g){
         for(LevelMenuOption levelMenuOption : levelMenuOptions){
             levelMenuOption.draw(g);
         }
     }
 
+    // getLevelMenuOptions method
     public ArrayList<LevelMenuOption> getLevelMenuOptions(){
         return levelMenuOptions;
     }

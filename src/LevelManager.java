@@ -1,17 +1,18 @@
 package src;
 
+// imports
 import java.util.*;
-
 import javax.imageio.ImageIO;
-
-import src.Objects.*;
-
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Polygon;
 import java.io.*;
 
+import src.Objects.*;
+
+// LevelManager class
 public class LevelManager {
+    // variables
     private ArrayList<Level> levels;
     private ArrayList<Level> userLevels;
     @SuppressWarnings("unused")
@@ -22,6 +23,7 @@ public class LevelManager {
     @SuppressWarnings("unused")
     private Main main;
 
+    // constructor
     public LevelManager(GameManager gameManager, Main main, boolean editor) {
         levels = new ArrayList<Level>();
         userLevels = new ArrayList<Level>();

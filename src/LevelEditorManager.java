@@ -1,5 +1,6 @@
 package src;
 
+// Imports
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -12,20 +13,25 @@ import src.Objects.ActiveObjects.DamageObject;
 import src.Objects.ActiveObjects.EnergyObject;
 import src.Objects.ActiveObjects.HealObject;
 
+// LevelEditorManager class
 public class LevelEditorManager {
+    // Variables
     private LevelEditor levelEditor;
     private ArrayList<EditorObject> editorObjects;
     private Level level;
 
     private EditorObject selectedObject;
 
+    // Constructor
     public LevelEditorManager(LevelEditor levelEditor){
         this.levelEditor = levelEditor;
     }
     
+    // start method
     public void start(Level level){
         this.level = level;
         editorObjects = new ArrayList<EditorObject>();
+        // If the level is new, add the default objects, otherwise add the objects from the level
         if(level.isNewLevel()){
             editorObjects.add(new EditorObject(100, 600, new Color[]{Color.MAGENTA}, new Polygon[]{new Polygon(new int[]{0, 50, 50, 0}, new int[]{0, 0, 50, 50},4)}, true, null, true, true, true, this, "player"));
             editorObjects.add(new EditorObject(0, 718, new Color[]{Color.BLACK}, new Polygon[]{new Polygon(new int[]{0, 1360, 1360, 0}, new int[]{0, 0, 50, 50}, 4)}, true, null, false, false, true, this, "gameObject"));
@@ -37,7 +43,9 @@ public class LevelEditorManager {
         }
     }
 
+    // update method
     public void update(){
+        // tempEditorObjects is used to prevent a ConcurrentModificationException
         ArrayList<EditorObject> tempEditorObjects = new ArrayList<EditorObject>();
         for(EditorObject editorObject : editorObjects){
             tempEditorObjects.add(editorObject);
@@ -48,16 +56,21 @@ public class LevelEditorManager {
         }
     }
 
+    // save method
     public void save(){
+        // Convert the editor objects to game objects
         ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
         for(EditorObject editorObject : editorObjects){
             gameObjects.add(convertToGameObject(editorObject));
         }
+        // Save the game objects to the level
         level.setGameObjects(gameObjects);
         level.save();
     }
 
+    // mouseAction method
     public void mouseAction(){
+        // If the mouse is over an editor object, select it
         for(EditorObject editorObject : editorObjects){
             if(editorObject.isMouseOver()){
                 if(editorObject.getFocus()){
@@ -70,6 +83,7 @@ public class LevelEditorManager {
                 }
             }
         }
+        // If the mouse is over a level menu option, perform the action
         for(LevelMenuOption levelMenuOption : levelEditor.getLevelMenuBar().getLevelMenuOptions()){
             if(levelMenuOption.isMouseOver()){
                 levelMenuOption.mouseAction();
@@ -77,6 +91,7 @@ public class LevelEditorManager {
         }
     }
 
+    // convertToGameObject method
     private GameObject convertToGameObject(EditorObject editorObject){
         String objectClass = editorObject.getGameObjectClass().toLowerCase();
         if(objectClass.contains(".")){
@@ -84,6 +99,7 @@ public class LevelEditorManager {
             objectClass = objectClass.split("\\.")[((int) count)].toLowerCase();
         }
 
+        // Create the game object based on the class
         switch(objectClass){
             case "gameobject":
                 return new GameObject(editorObject.getX(), editorObject.getY(), editorObject.getColors(), editorObject.getShapes(), editorObject.getShapeQ(), editorObject.getImage(), editorObject.hasGravity(), editorObject.isPhysicsObject(), editorObject.isCollisionObject(), level.getGameManager());
@@ -101,11 +117,13 @@ public class LevelEditorManager {
         return null;
     }
 
+    // convertToEditorObject method
     private EditorObject convertToEditorObject(GameObject gameObject){
         EditorObject editorObject = new EditorObject(gameObject.getX(), gameObject.getY(), gameObject.getColors(), gameObject.getShapes(), gameObject.getShapeQ(), gameObject.getImage(), gameObject.hasGravity(), gameObject.isPhysicsObject(), gameObject.isCollisionObject(), this, gameObject.ClassName());
         return editorObject;
     }
 
+    // getters and setters
     public ArrayList<EditorObject> getEditorObjects(){
         return editorObjects;
     }
@@ -118,6 +136,7 @@ public class LevelEditorManager {
         this.editorObjects = editorObjects;
     }
 
+    // createEditorObject method
     public void createEditorObect(String objectClass){
         JTextField[] fields = new JTextField[10];
         for(int i = 0; i < fields.length; i++){
@@ -169,6 +188,7 @@ public class LevelEditorManager {
         }
     }
 
+    // get color method
     public Color getColor(String color){
         boolean colorQ = color.contains(",");
         if(colorQ){
@@ -199,6 +219,7 @@ public class LevelEditorManager {
         }
     }
 
+    // getLevel method
     public Level getLevel(){
         return level;
     }

@@ -170,20 +170,27 @@ public class Main extends JFrame{
         }, new int[]{150,60}, new int[]{(getSize().width/2)+22,400}, false, false);
     }
 
+    // method to create the level menus
     public void createLevelMenu(ArrayList<ArrayList<Level>> levels, ArrayList<ArrayList<Level>> customLevels){
+        // add the level menus to the level menu array
         for(ArrayList<Level> levelPage : levels){
             levelMenus.add(levelMenu(levelPage, true));
         }
+        // set the number of main level pages
         mainLevelPages = levelMenus.size();
+        // add the custom level menus to the level menu array
         for(ArrayList<Level> levelPage : customLevels){
             levelMenus.add(levelMenu(levelPage, false));
         }
         levelMenu = levelMenus.get(0);
     }
 
+    // method to create a level menu
     public Menu levelMenu(ArrayList<Level> levels, boolean main){
+        // create the level menu
         Menu newLevelMenu = new Menu(this, Color.decode("#88D9E6"), null, new Color[]{Color.decode("#8B8BAE"), Color.decode("#FFFFFF")});
 
+        // Header text
         JLabel levelLabel = new JLabel();
         if(main) levelLabel.setText("Level Menu - Page " + (levelMenus.size()+1));
         else levelLabel.setText("Custom Levels Menu - Page " + (levelMenus.size()+1-mainLevelPages));
@@ -193,6 +200,7 @@ public class Main extends JFrame{
         levelLabel.setForeground(Color.decode("#001D4A"));
         newLevelMenu.add(levelLabel);
 
+        // Add level buttons to the level menu
         for(int i = 0; i < levels.size(); i++){
             Level level = levels.get(i);
             newLevelMenu.addButton(level.getLevelName(), (a,b) -> {
@@ -206,6 +214,7 @@ public class Main extends JFrame{
             }, new int[]{50,60}, new int[]{150+100+((i%6)*175),200+(int)((Math.floor(i/6))*100)}, false, true);
         }
 
+        // add the buttons to the level menu
         newLevelMenu.addButton("New Level", (a,b) -> {
             showLevelEditor(true, true, true, "");
             return 1;
@@ -216,6 +225,7 @@ public class Main extends JFrame{
             return 1;
         }, new int[]{150,60}, new int[]{(getSize().width/2)-50,650}, true, false);
 
+        // triangle buttons to change the level menu page
         int rightX = 625;
         int rightY = 150;
         JButton rightButton = new TriangleButton(new int[]{rightX,rightX+50,rightX}, new int[]{rightY,rightY+50,rightY+100}, Color.decode("#8B8BAE"));
@@ -374,6 +384,7 @@ public class Main extends JFrame{
         SwingUtilities.invokeLater(Main::new);
     }
 }
+// class to create a triangle button
 class TriangleButton extends JButton {
 
     private Polygon triangle;

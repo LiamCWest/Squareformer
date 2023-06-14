@@ -1,10 +1,13 @@
 package src;
 
+// Import necessary libraries
 import java.awt.Graphics2D;
 
 import src.Objects.Player;
 
+// EnergyDisplay class
 public class EnergyDisplay {
+    // Variables for x, y, width, height, barWidth, barHeight, and energy
     private int x;
     private int y;
     private int width = 100;
@@ -16,6 +19,7 @@ public class EnergyDisplay {
 
     private Player player;
 
+    // Constructor
     public EnergyDisplay(int x, int y, Player player) {
         this.x = x;
         this.y = y;
@@ -24,11 +28,13 @@ public class EnergyDisplay {
         this.energy = player.getEnergy();
     }
 
+    // update method
     public void update() {
         energy = player.getEnergy();
         barWidth = (int) ((energy/10) * (width - 10));
     }
 
+    // draw the energy bar
     public void draw(Graphics2D g){
         g.setColor(java.awt.Color.BLACK);
         g.fillRect(x, y, width, height);

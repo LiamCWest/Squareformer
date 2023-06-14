@@ -1,5 +1,6 @@
 package src;
 
+// Imports
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
@@ -8,7 +9,9 @@ import src.Objects.ActiveObjects.DamageObject;
 import src.Objects.ActiveObjects.EnergyObject;
 import src.Objects.ActiveObjects.HealObject;
 
+// Level class
 public class Level {
+    // Variables
     private ArrayList<ArrayList<Object>> objectValues;
     private ArrayList<GameObject> gameObjects;
     private LevelManager levelManager;
@@ -18,6 +21,7 @@ public class Level {
     private boolean newLevel;
     private boolean isMainLevel;
     
+    // Constructor
     public Level(String levelName, LevelManager levelManager, GameManager gameManager, boolean newLevel, boolean isMainLevel) {
         this.levelName = levelName;
         this.levelManager = levelManager;
@@ -28,20 +32,25 @@ public class Level {
         if(!(newLevel)) this.objectValues = levelManager.decodeLevel(levelFile);
     }
 
+    // start method
     public void start(){
-        if(!(newLevel)){
-            gameObjects = pullGameObjects();
-            gameManager.setGameObjects(gameObjects);
+        if(!(newLevel)){ // If the level is not new
+            gameObjects = pullGameObjects(); // Pull the game objects from the level file
+            gameManager.setGameObjects(gameObjects); // Set the game objects in the game manager
         }
     }
 
+    // save method
     public void save(){
-        levelManager.encodeLevel(this);
+        levelManager.encodeLevel(this); // Encode the level
     }
 
+    // pullGameObjects method
     public ArrayList<GameObject> pullGameObjects(){
         ArrayList<GameObject> objects = new ArrayList<GameObject>();
+        // Loop through the object values
         for(ArrayList<Object> object : objectValues){
+            // Switch statement for the object type
             switch(object.get(0).toString().toLowerCase()){
                 case "gameobject":
                     objects.add(new GameObject((int) object.get(1), (int) object.get(2), (Color[]) object.get(3), (Polygon[]) object.get(4), (boolean) object.get(5), (Image) object.get(6), (boolean) object.get(7), (boolean) object.get(8), (boolean) object.get(9), gameManager));
@@ -72,6 +81,7 @@ public class Level {
         return objects;
     }
 
+    // Getters and Setters
     public String getLevelName(){
         return levelName;
     }

@@ -26,7 +26,7 @@ public class GameObject{
     private Rectangle hitbox;
     private ArrayList<ObjectComponent> components = new ArrayList<>();
 
-    // constructors
+    // constructor
     public GameObject(int x, int y, Color[] colors, Polygon[] shapes, boolean shapeQ, Image image, boolean hasGravity, boolean isPhysicsObject, boolean isCollisionObject, GameManager gameManager) {
         // set the variables
         this.x = x;
@@ -93,12 +93,15 @@ public class GameObject{
         }
     }
 
+    // update method
     public void update(){
+        // create a temporary arraylist of components to avoid concurrent modification
         ArrayList<ObjectComponent> tempComponents = new ArrayList<ObjectComponent>();
         for (ObjectComponent component : components) {
             tempComponents.add(component);
         }
 
+        // loop through the components and update them
         for (ObjectComponent component : tempComponents) {
             component.update();
         }
@@ -106,6 +109,7 @@ public class GameObject{
         move();
     }
     
+    // move the game object
     public void move(){
         x += velocity[0];
         y += velocity[1];
@@ -176,12 +180,11 @@ public class GameObject{
         return new Rectangle(hitboxShape.x + dx, hitboxShape.y + dy, hitboxShape.width, hitboxShape.height);
     }
 
-    // getter method for the x position
+    // getters and setters
     public int getX(){
         return x;
     }
 
-    // getter method for the y position
     public int getY(){
         return y;
     }

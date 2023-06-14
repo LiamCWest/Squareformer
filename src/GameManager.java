@@ -41,18 +41,21 @@ public class GameManager {
         healthDisplay.update();
     }
 
+    // end game method
     public void endGame(){
         gameObjects.clear();
         game.stop();
         game.start(true, 0);
     }
 
+    // next level method
     public void nextLevel(){
         gameObjects.clear();
         game.stop();
         game.start(true, game.getLevelManager().getCurrentLevel() + 1);
     }
 
+    // getter method for the player
     public Player getPlayer(){
         return player;
     }
@@ -67,10 +70,12 @@ public class GameManager {
         this.gameObjects = gameObjects;
     }
 
+    // on mouse click, grapple
     public void mouseAction(){
         player.grapple();
     }
 
+    // getters and setter
     public JFrame getGameWindow(){
         return game.getGameWindow();
     }
