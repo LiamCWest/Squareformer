@@ -52,7 +52,12 @@ public class GameManager {
     public void nextLevel(){
         gameObjects.clear();
         game.stop();
-        game.start(true, game.getLevelManager().getCurrentLevel() + 1);
+        int nextLevel = game.getLevelManager().getCurrentLevel() + 1;
+        if(nextLevel > game.getLevelManager().getLevels().size() - 1){
+            game.stop();
+            game.getGameWindow().showMainMenu();
+        }
+        game.start(true, nextLevel);
     }
 
     // getter method for the player

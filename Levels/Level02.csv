@@ -1,0 +1,19 @@
+player,100,600,1,true,null,true,true,true
+true,255,0,255,
+4,0,50,50,0,0,0,50,50,
+gameobject,0,718,1,true,null,false,false,true
+true,0,0,0,
+4,0,1360,1360,0,0,0,50,50,
+objective,1310,668,1,true,null,false,false,false
+true,0,255,0,
+4,0,50,50,0,0,0,50,50,
+gameobject,440,668,1,true,null,false,false,true
+true,0,0,0,
+4,0,100,100,0,0,0,50,50,
+gameobject,690,668,1,true,null,false,false,true
+true,0,0,0,
+4,0,100,100,0,0,0,50,50,
+damageobject,540,668,1,true,null,false,false,false
+true,255,0,0,
+4,0,150,150,0,0,0,50,50,
+text,100,300,Don't touch the red! it will hurt you!,50

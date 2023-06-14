@@ -188,7 +188,7 @@ public class Game extends JPanel{
     }
 
     // getter methods
-    public JFrame getGameWindow(){
+    public Main getGameWindow(){
         return main;
     }
 
