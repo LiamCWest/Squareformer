@@ -13,7 +13,7 @@ public class DamageObject extends ActiveObject{
         super(x, y, colors, shapes, shapeQ, image, hasGravity, isPhysicsObject, gameManager);
 
         // Set change to -0.1
-        super.setChange(-0.1);
+        super.setChange(-0.5);
 
         // Add health change component
         addComponent(new HealthChangeComponent(this), -1);

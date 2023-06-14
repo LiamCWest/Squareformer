@@ -38,7 +38,7 @@ public class HealthDisplay {
         g.setColor(java.awt.Color.RED);
 
         // the area to remove from the hearts
-        healthBar.height = 94 - (94 * (health / 20));
+        healthBar.height = 94 - (94 * (health / 10));
         
         // the heart removing the healthBar
         Area healthArea = new Area(heart(x, y, 50, true, healthBar));

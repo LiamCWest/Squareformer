@@ -26,7 +26,7 @@ public class Level {
         this.levelName = levelName;
         this.levelManager = levelManager;
         this.gameManager = gameManager;
-        this.levelFile = new File("Levels/"+levelName+".csv");
+        this.levelFile = isMainLevel ? new File("Levels/"+levelName+".csv") : new File("Levels/UserCreated/"+levelName+".csv");
         this.newLevel = newLevel;
         this.isMainLevel = isMainLevel;
         if(!(newLevel)) this.objectValues = levelManager.decodeLevel(levelFile);

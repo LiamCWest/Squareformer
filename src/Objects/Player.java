@@ -10,7 +10,7 @@ public class Player extends GameObject {
     // private variables for jumping and moving
     private GrappleComponent grapple;
     private double energy = 10.0;
-    private double health = 20.0;
+    private double health = 10.0;
     private int energyDelay = 0;
     
     // constructor

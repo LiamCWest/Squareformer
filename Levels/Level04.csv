@@ -1,0 +1,23 @@
+player,100,600,1,true,null,true,true,true
+true,255,0,255,
+4,0,50,50,0,0,0,50,50,
+gameobject,0,718,1,true,null,false,false,true
+true,0,0,0,
+4,0,1360,1360,0,0,0,50,50,
+objective,1311,668,1,true,null,false,false,false
+true,0,255,0,
+4,0,50,50,0,0,0,50,50,
+damageobject,345,648,1,true,null,false,false,false
+true,255,0,0,
+4,0,700,700,0,0,0,70,70,
+gameobject,269,121,1,true,null,false,false,true
+true,0,0,0,
+4,0,100,100,0,0,0,55,55,
+gameobject,586,185,1,true,null,false,false,true
+true,0,0,0,
+4,0,150,150,0,0,0,55,55,
+gameobject,977,161,1,true,null,false,false,true
+true,0,0,0,
+4,0,100,100,0,0,0,45,45,
+text,200,100,Your energy decreases the more you grapple,40
+text,400,150,You need energy to grapple,20

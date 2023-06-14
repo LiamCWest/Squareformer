@@ -204,7 +204,7 @@ public class Main extends JFrame{
         for(int i = 0; i < levels.size(); i++){
             Level level = levels.get(i);
             newLevelMenu.addButton(level.getLevelName(), (a,b) -> {
-                showGame(true, levels.indexOf(level));
+                showGame(true, main ? levels.indexOf(level) : gamePanel.getLevelManager().getLevels().size()+levels.indexOf(level));
                 return 1;
             }, new int[]{100,60}, new int[]{150+((i%6)*175),200+(int)((Math.floor(i/6))*100)}, false, false);
 

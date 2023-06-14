@@ -7,13 +7,16 @@ true,0,0,0,
 objective,1310,668,1,true,null,false,false,false
 true,0,255,0,
 4,0,50,50,0,0,0,50,50,
-gameobject,440,663,1,true,null,false,false,true
+gameobject,208,663,1,true,null,false,false,true
 true,0,0,0,
 4,0,100,100,0,0,0,55,55,
-gameobject,690,663,1,true,null,false,false,true
-true,0,0,0,
-4,0,100,100,0,0,0,55,55,
-damageobject,540,663,1,true,null,false,false,false
+damageobject,307,663,1,true,null,false,false,false
 true,255,0,0,
+4,0,500,500,0,0,0,55,55,
+gameobject,807,663,1,true,null,false,false,true
+true,0,0,0,
+4,0,100,100,0,0,0,55,55,
+gameobject,497,232,1,true,null,false,false,true
+true,0,0,0,
 4,0,150,150,0,0,0,55,55,
-text,100,300,Don't touch the red! It will hurt you!,50
+text,200,200,Click to use the grappling hook,50

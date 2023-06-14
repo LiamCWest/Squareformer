@@ -36,19 +36,19 @@ public class HealthChangeComponent implements ObjectComponent{
 
             health = activeObject.getGameManager().getPlayer().getHealth();
             // Remove the object if it has been used up            
-            if(activeObject.getChange() > 0 && health < 20){
+            if(activeObject.getChange() > 0 && health < 10){
                 activeObject.getGameManager().getPlayer().changeHealth(activeObject.getChange());
                 activeObject.setVisable(false);
                 activeObject.removeComponent(this);
             }
 
             // End the game if the player's health is too low
-            if(health < 0){
+            if(health <= 0){
                 activeObject.getGameManager().endGame();
             }
             // Set the player's health to 20 if it is too high
-            else if(health > 20){
-                activeObject.getGameManager().getPlayer().setHealth(20);
+            else if(health > 10){
+                activeObject.getGameManager().getPlayer().setHealth(10);
             }
 
         }

@@ -48,7 +48,7 @@ public class LevelManager {
         });
         Arrays.sort(userLevelFiles);
         for(File levelFile : userLevelFiles){
-            userLevels.add(new Level(levelFile.getName().split("\\.")[0], this, gameManager, true, false));
+            userLevels.add(new Level(levelFile.getName().split("\\.")[0], this, gameManager, false, false));
         }
 
         if(!(editor)){
@@ -250,7 +250,8 @@ public class LevelManager {
     }
 
     public void loadLevel(int levelIndex){
-        levels.get(levelIndex).start();
+        if(levelIndex < levels.size()) levels.get(levelIndex).start();
+        else userLevels.get(levelIndex - levels.size()).start();
     }
 
     public Level getLevel(int levelIndex){
