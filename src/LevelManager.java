@@ -41,14 +41,18 @@ public class LevelManager {
         }
 
         userLevelFolder = new File("Levels/UserCreated");
-        File[] userLevelFiles = userLevelFolder.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith("csv");
+        if(userLevelFolder.exists()){
+            File[] userLevelFiles = userLevelFolder.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.endsWith("csv");
+                }
+            });
+            if(userLevelFiles != null && userLevelFiles.length > 0){
+                Arrays.sort(userLevelFiles);
+                for(File levelFile : userLevelFiles){
+                    userLevels.add(new Level(levelFile.getName().split("\\.")[0], this, gameManager, false, false));
+                }
             }
-        });
-        Arrays.sort(userLevelFiles);
-        for(File levelFile : userLevelFiles){
-            userLevels.add(new Level(levelFile.getName().split("\\.")[0], this, gameManager, false, false));
         }
 
         if(!(editor)){
